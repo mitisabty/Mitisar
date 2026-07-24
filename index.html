@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy Birthday Beautiful Sandini ❤️</title>
+    
+    <!-- Google Fonts & FontAwesome CDN -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;600;700&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ==========================================================================
+           1. GLOBAL RESET & STYLES
+           ========================================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary-pink: #ff4d8d;
+            --soft-pink: #ffd1dc;
+            --gold: #ffd700;
+            --rose-gold: #e5a93c;
+            --bg-dark: #0b091a;
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0b091a 0%, #1a0b2e 50%, #2a0826 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Ambient Canvas overlay */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        /* ==========================================================================
+           2. INTRO CURTAIN & CANDLE BLOW EXPERIENCE
+           ========================================================================== */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #030208;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.5s;
+        }
+
+        #intro-overlay.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .candle-container {
+            position: relative;
+            cursor: pointer;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .candle {
+            width: 45px;
+            height: 140px;
+            background: linear-gradient(to right, #e0e0e0, #ffffff, #dcdcdc);
+            border-radius: 8px 8px 4px 4px;
+            position: relative;
+            margin: 0 auto;
+            box-shadow: inset 0 5px 10px rgba(0,0,0,0.1), 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        .wick {
+            width: 4px;
+            height: 16px;
+            background-color: #444;
+            position: absolute;
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .flame {
+            width: 24px;
+            height: 36px;
+            background: radial-gradient(ellipse at bottom, #ffee55 0%, #ff8800 50%, rgba(255,0,0,0) 100%);
+            border-radius: 50% 50% 35% 35% / 60% 60% 40% 40%;
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: flicker 1.2s infinite alternate ease-in-out;
+            box-shadow: 0 0 20px #ff9900, 0 0 40px #ff5500, 0 0 60px #ff2200;
+        }
+
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1) rotate(-1deg); opacity: 0.95; }
+            50% { transform: translateX(-50%) scale(1.08) rotate(1deg); opacity: 1; }
+            100% { transform: translateX(-50%) scale(0.95) rotate(-2deg); opacity: 0.9; }
+        }
+
+        .flame.extinguished {
+            display: none;
+        }
+
+        .intro-text {
+            margin-top: 40px;
+            font-size: 1.2rem;
+            color: var(--soft-pink);
+            letter-spacing: 1px;
+            text-align: center;
+            font-weight: 300;
+            animation: pulseText 2s infinite ease-in-out;
+            padding: 0 20px;
+        }
+
+        @keyframes pulseText {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.03); }
+        }
+
+        /* ==========================================================================
+           3. MAIN LAYOUT & WRAPPER
+           ========================================================================== */
+        #main-content {
+            opacity: 0;
+            transition: opacity 1.5s ease-in;
+            position: relative;
+            z-index: 10;
+        }
+
+        #main-content.visible {
+            opacity: 1;
+        }
+
+        section {
+            padding: 70px 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            text-align: center;
+            color: var(--soft-pink);
+            margin-bottom: 40px;
+            text-shadow: 0 0 10px rgba(255, 77, 141, 0.5);
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: var(--glass-shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px 0 rgba(255, 77, 141, 0.25);
+        }
+
+        /* ==========================================================================
+           4. HERO SECTION
+           ========================================================================== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding-top: 40px;
+        }
+
+        .grand-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            letter-spacing: 4px;
+            color: var(--gold);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            animation: fadeInDown 1.2s ease;
+        }
+
+        .name-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ff4d8d, #ffd700, #ff85a2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 30px;
+            filter: drop-shadow(0 0 15px rgba(255,77,141,0.4));
+        }
+
+        .hero-img-container {
+            position: relative;
+            width: 280px;
+            height: 380px;
+            margin: 0 auto 30px auto;
+            border-radius: 25px;
+            padding: 8px;
+            background: linear-gradient(45deg, var(--primary-pink), var(--gold));
+            box-shadow: 0 0 30px rgba(255, 77, 141, 0.5);
+            animation: floatHero 4s infinite ease-in-out;
+        }
+
+        @keyframes floatHero {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        .hero-img-box {
+            width: 100%;
+            height: 100%;
+            border-radius: 18px;
+            overflow: hidden;
+            position: relative;
+            background: #150d2a;
+        }
+
+        .hero-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+        }
+
+        .hero-img-container:hover .hero-img-box img {
+            transform: scale(1.08);
+        }
+
+        .hero-quote {
+            font-size: 1.1rem;
+            color: #e2e2e2;
+            max-width: 650px;
+            line-height: 1.8;
+            font-weight: 300;
+            margin: 0 auto;
+        }
+
+        /* ==========================================================================
+           5. TYPEWRITER BIRTHDAY MESSAGE SECTION
+           ========================================================================== */
+        .typewriter-card {
+            max-width: 800px;
+            margin: 0 auto;
+            min-height: 220px;
+            position: relative;
+        }
+
+        .typewriter-text {
+            font-size: 1.15rem;
+            line-height: 2;
+            color: #f8f8f8;
+            font-weight: 300;
+            white-space: pre-wrap;
+            border-right: 2px solid var(--primary-pink);
+            animation: blinkCursor 0.8s infinite;
+        }
+
+        @keyframes blinkCursor {
+            0%, 100% { border-color: transparent; }
+            50% { border-color: var(--primary-pink); }
+        }
+
+        /* ==========================================================================
+           6. MEMORY GALLERY
+           ========================================================================== */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-item {
+            position: relative;
+            height: 320px;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid var(--glass-border);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.12);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(11,9,26,0.9), transparent);
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+
+        .gallery-overlay h4 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.6rem;
+            color: var(--soft-pink);
+        }
+
+        /* ==========================================================================
+           7. WISHES GRID
+           ========================================================================== */
+        .wishes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .wish-card {
+            text-align: center;
+            padding: 35px 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wish-icon {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 15px;
+        }
+
+        .wish-card h3 {
+            font-size: 1.3rem;
+            color: var(--soft-pink);
+            margin-bottom: 12px;
+        }
+
+        .wish-card p {
+            font-size: 0.95rem;
+            color: #cccccc;
+            line-height: 1.6;
+        }
+
+        /* ==========================================================================
+           8. INTERACTIVE BIRTHDAY CAKE
+           ========================================================================== */
+        .cake-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .cake {
+            position: relative;
+            width: 220px;
+            height: 200px;
+            cursor: pointer;
+        }
+
+        .cake-plate {
+            width: 260px;
+            height: 16px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            position: absolute;
+            bottom: 0;
+            left: -20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .layer {
+            position: absolute;
+            width: 100%;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .layer-bottom {
+            height: 70px;
+            bottom: 16px;
+            background: linear-gradient(to right, #ff758c, #ff7eb3);
+        }
+
+        .layer-middle {
+            height: 60px;
+            bottom: 86px;
+            width: 80%;
+            left: 10%;
+            background: linear-gradient(to right, #ffffff, #ffe5ec);
+        }
+
+        .layer-top {
+            height: 50px;
+            bottom: 146px;
+            width: 60%;
+            left: 20%;
+            background: linear-gradient(to right, #ff758c, #ff7eb3);
+        }
+
+        .icing {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 15px;
+            background: #ffffff;
+            border-radius: 10px 10px 5px 5px;
+        }
+
+        .cake-candle {
+            width: 10px;
+            height: 30px;
+            background: repeating-linear-gradient(45deg, #ffd700, #ffd700 5px, #ffffff 5px, #ffffff 10px);
+            position: absolute;
+            top: 116px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 3px;
+        }
+
+        .cake-flame {
+            width: 10px;
+            height: 15px;
+            background: #ffaa00;
+            border-radius: 50%;
+            position: absolute;
+            top: -15px;
+            left: 0;
+            box-shadow: 0 0 10px #ffaa00;
+            animation: flicker 1s infinite alternate;
+        }
+
+        .cake-cut-msg {
+            margin-top: 25px;
+            font-size: 1.1rem;
+            color: var(--gold);
+            font-weight: 400;
+        }
+
+        /* Slice Animation state */
+        .cake.cut .layer-top {
+            transform: translateY(-5px);
+            transition: transform 0.5s ease;
+        }
+
+        /* ==========================================================================
+           9. FOOTER / ENDING
+           ========================================================================== */
+        footer {
+            text-align: center;
+            padding: 60px 20px 40px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .final-wish {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.2rem;
+            color: var(--soft-pink);
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(255,77,141,0.6);
+        }
+
+        .credit-text {
+            font-size: 1rem;
+            color: #aaaaaa;
+            letter-spacing: 1px;
+        }
+
+        .credit-text span {
+            color: var(--primary-pink);
+        }
+
+        /* Floating Audio Control */
+        .audio-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 999;
+            box-shadow: var(--glass-shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .audio-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            .name-title { font-size: 3.2rem; }
+            .section-title { font-size: 2.4rem; }
+            .hero-img-container { width: 230px; height: 310px; }
+            .final-wish { font-size: 2.3rem; }
+            section { padding: 50px 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Particle Canvas for Confetti/Fireworks/Petals -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Floating Audio Toggle Button -->
+    <button class="audio-btn" id="audio-toggle" title="Toggle Music">
+        <i class="fas me fa-music"></i>
+    </button>
+
+    <!-- INTRO OVERLAY (Candle Blow) -->
+    <div id="intro-overlay">
+        <div class="candle-container" id="candle-trigger">
+            <div class="candle">
+                <div class="wick"></div>
+                <div class="flame" id="main-flame"></div>
+            </div>
+            <p class="intro-text">Tap the candle to make a birthday wish 🕯️</p>
+        </div>
+    </div>
+
+    <!-- MAIN APP CONTENT -->
+    <div id="main-content">
+
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <div class="grand-title">🎉 Happy Birthday 🎉</div>
+            <h1 class="name-title">besties sona  ❤️</h1>
+
+            <div class="hero-img-container">
+                <div class="hero-img-box">
+                    <!-- SVG Vector Fallback Image to ensure immediate stunning look -->
+                    <img src="photo2.jpg" alt="Sandini's Hero Photo" id="hero-img">
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <p class="hero-quote">
+                    "May your smile always shine as bright as today. Wishing you endless happiness, love, success, and beautiful memories. Happy Birthday Sandini ❤️"
+                </p>
+            </div>
+        </section>
+
+        <!-- TYPEWRITER BIRTHDAY MESSAGE -->
+        <section>
+            <h2 class="section-title">A Special Note For You</h2>
+            <div class="glass-card typewriter-card">
+                <div class="typewriter-text" id="typewriter"></div>
+            </div>
+        </section>
+
+        <!-- MEMORY GALLERY -->
+        <section>
+            <h2 class="section-title">Precious Memories 📸</h2>
+            <div class="gallery-grid">
+                
+                <div class="gallery-item">
+                    <img src="photo1.jpg" alt="Memory 1">
+                    <div class="gallery-overlay">
+                        <h4>Beautiful Smile ✨</h4>
+                    </div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="photo3.jpg" alt="Memory 2">
+                    <div class="gallery-overlay">
+                        <h4>Unforgettable Days 🌸</h4>
+                    </div>
+                </div>
+
+                <div class="gallery-item">
+                    <img src="photo4.jpg" alt="Memory 3">
+                    <div class="gallery-overlay">
+                        <h4>Pure Joy 💖</h4>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- WISHES SECTION -->
+        <section>
+            <h2 class="section-title">Wishes For Your Journey 🌟</h2>
+            <div class="wishes-grid">
+                
+                <div class="glass-card wish-card">
+                    <i class="fas fa-heart wish-icon"></i>
+                    <h3>Endless Happiness</h3>
+                    <p>May every single moment of your year ahead be filled with laughter, love, and light.</p>
+                </div>
+
+                <div class="glass-card wish-card">
+                    <i class="fas fa-star wish-icon"></i>
+                    <h3>Dream Big</h3>
+                    <p>May all your aspirations and grandest dreams manifest effortlessly into reality.</p>
+                </div>
+
+                <div class="glass-card wish-card">
+                    <i class="fas fa-crown wish-icon"></i>
+                    <h3>Always Shine</h3>
+                    <p>Never let anything dim your radiance. You are truly unique and special.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- INTERACTIVE CAKE CELEBRATION -->
+        <section>
+            <h2 class="section-title">Make A Wish & Cut The Cake 🎂</h2>
+            <div class="cake-wrapper">
+                <div class="cake" id="interactive-cake">
+                    <div class="cake-plate"></div>
+                    <div class="layer layer-bottom">
+                        <div class="icing"></div>
+                    </div>
+                    <div class="layer layer-middle">
+                        <div class="icing"></div>
+                    </div>
+                    <div class="layer layer-top">
+                        <div class="icing"></div>
+                    </div>
+                    <div class="cake-candle">
+                        <div class="cake-flame"></div>
+                    </div>
+                </div>
+                <p class="cake-cut-msg" id="cake-status">Tap the cake to cut dynamic slice! 🍰</p>
+            </div>
+        </section>
+
+        <!-- FOOTER / ENDING -->
+        <footer>
+            <h2 class="final-wish">❤️ Once Again Happy Birthday Beautiful Sandini ❤️</h2>
+            <p class="credit-text">Made with ❤️ by <span>My Best Friend</span></p>
+        </footer>
+
+    </div>
+
+    <!-- ==========================================================================
+       JAVASCRIPT AUDIO, ANIMATION & INTERACTION ENGINE
+       ========================================================================== -->
+    <script>
+        /* --------------------------------------------------------------------------
+           1. WEB AUDIO SYNTHESIZER (Piano Chords & Celebration SFX)
+           -------------------------------------------------------------------------- */
+        class SoundEngine {
+            constructor() {
+                this.ctx = null;
+                this.isPlaying = false;
+                this.timer = null;
+            }
+
+            init() {
+                if (!this.ctx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    this.ctx = new AudioContext();
+                }
+                if (this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+            }
+
+            playTone(freq, duration, type = 'sine', delay = 0) {
+                if (!this.ctx) return;
+                setTimeout(() => {
+                    try {
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.type = type;
+                        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                        
+                        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+
+                        osc.connect(gain);
+                        gain.connect(this.ctx.destination);
+
+                        osc.start();
+                        osc.stop(this.ctx.currentTime + duration);
+                    } catch (e) {}
+                }, delay);
+            }
+
+            playPianoMelody() {
+                this.init();
+                this.isPlaying = true;
+                // Soft Melodic Chord Progression (C - G - Am - F)
+                const notes = [
+                    523.25, 659.25, 783.99, // C Chord
+                    392.00, 493.88, 587.33, // G Chord
+                    440.00, 523.25, 659.25, // Am Chord
+                    349.23, 440.00, 523.25  // F Chord
+                ];
+
+                let step = 0;
+                this.timer = setInterval(() => {
+                    if (!this.isPlaying) return;
+                    this.playTone(notes[step % notes.length], 1.8, 'sine');
+                    if (step % 2 === 0) {
+                        this.playTone(notes[(step + 2) % notes.length] / 2, 2.2, 'triangle');
+                    }
+                    step++;
+                }, 600);
+            }
+
+            playBlowSound() {
+                this.init();
+                // White noise blow sound
+                const bufferSize = this.ctx.sampleRate * 0.8;
+                const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+                const output = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    output[i] = Math.random() * 2 - 1;
+                }
+
+                const whiteNoise = this.ctx.createBufferSource();
+                whiteNoise.buffer = buffer;
+
+                const filter = this.ctx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(800, this.ctx.currentTime);
+                filter.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.8);
+
+                const gain = this.ctx.createGain();
+                gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.8);
+
+                whiteNoise.connect(filter);
+                filter.connect(gain);
+                gain.connect(this.ctx.destination);
+
+                whiteNoise.start();
+            }
+
+            playPop() {
+                this.init();
+                this.playTone(800 + Math.random() * 400, 0.15, 'sine');
+            }
+
+            stop() {
+                this.isPlaying = false;
+                if (this.timer) clearInterval(this.timer);
+            }
+        }
+
+        const sound = new SoundEngine();
+
+        /* --------------------------------------------------------------------------
+           2. CANVAS ENGINE (Confetti, Fireworks, Petals)
+           -------------------------------------------------------------------------- */
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const particles = [];
+        const fireworks = [];
+
+        class Particle {
+            constructor(x, y, type) {
+                this.x = x;
+                this.y = y;
+                this.type = type; // 'confetti', 'petal', 'smoke'
+                this.size = Math.random() * 8 + 4;
+                this.vx = (Math.random() - 0.5) * 6;
+                this.vy = type === 'smoke' ? -(Math.random() * 2 + 1) : Math.random() * 3 + 2;
+                this.color = type === 'smoke' ? 'rgba(200,200,200,0.4)' : ['#ff4d8d', '#ffd700', '#ffffff', '#ff85a2', '#70a1ff'][Math.floor(Math.random() * 5)];
+                this.rotation = Math.random() * 360;
+                this.rSpeed = (Math.random() - 0.5) * 5;
+                this.opacity = 1;
+                this.life = type === 'smoke' ? 80 : 300;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.rotation += this.rSpeed;
+                
+                if (this.type === 'smoke') {
+                    this.opacity -= 0.012;
+                    this.size += 0.2;
+                } else {
+                    this.vx *= 0.99;
+                }
+
+                this.life--;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.rotation * Math.PI) / 180);
+                ctx.globalAlpha = Math.max(0, this.opacity);
+
+                if (this.type === 'smoke') {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                } else if (this.type === 'petal') {
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, this.size, this.size / 2, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    ctx.fillStyle = this.color;
+                    ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                }
+
+                ctx.restore();
+            }
+        }
+
+        class FireworkParticle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 5 + 2;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+                this.opacity = 1;
+                this.friction = 0.95;
+                this.gravity = 0.12;
+            }
+
+            update() {
+                this.vx *= this.friction;
+                this.vy *= this.friction;
+                this.vy += this.gravity;
+                this.x += this.vx;
+                this.y += this.vy;
+                this.opacity -= 0.018;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, this.opacity);
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function createConfettiBurst(count = 70) {
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle(width / 2, height / 2 - 50, 'confetti'));
+            }
+        }
+
+        function createSmokeBurst(x, y) {
+            for (let i = 0; i < 25; i++) {
+                particles.push(new Particle(x, y, 'smoke'));
+            }
+        }
+
+        function triggerFirework(x, y) {
+            sound.playPop();
+            const colors = ['#ff4d8d', '#ffd700', '#ffffff', '#00f2fe', '#ff0844'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            for (let i = 0; i < 40; i++) {
+                fireworks.push(new FireworkParticle(x, y, color));
+            }
+        }
+
+        function renderLoop() {
+            ctx.clearRect(0, 0, width, height);
+
+            // Update & Draw Confetti/Petals
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.update();
+                p.draw();
+                if (p.life <= 0 || p.opacity <= 0 || p.y > height + 20) {
+                    particles.splice(i, 1);
+                }
+            }
+
+            // Update & Draw Fireworks
+            for (let i = fireworks.length - 1; i >= 0; i--) {
+                const f = fireworks[i];
+                f.update();
+                f.draw();
+                if (f.opacity <= 0) {
+                    fireworks.splice(i, 1);
+                }
+            }
+
+            // Ambient background flower petals
+            if (Math.random() < 0.08) {
+                particles.push(new Particle(Math.random() * width, -10, 'petal'));
+            }
+
+            requestAnimationFrame(renderLoop);
+        }
+
+        renderLoop();
+
+        /* --------------------------------------------------------------------------
+           3. CANDLE BLOW INTERACTION & INTRO FLOW
+           -------------------------------------------------------------------------- */
+        const candleTrigger = document.getElementById('candle-trigger');
+        const mainFlame = document.getElementById('main-flame');
+        const introOverlay = document.getElementById('intro-overlay');
+        const mainContent = document.getElementById('main-content');
+        let introBlown = false;
+
+        candleTrigger.addEventListener('click', (e) => {
+            if (introBlown) return;
+            introBlown = true;
+
+            // Blow sound & extinguish flame
+            sound.playBlowSound();
+            mainFlame.classList.add('extinguished');
+
+            // Smoke Effect
+            const rect = mainFlame.getBoundingClientRect();
+            createSmokeBurst(rect.left + 12, rect.top + 10);
+
+            // Start Audio
+            sound.playPianoMelody();
+
+            // Transition Overlay after smoke
+            setTimeout(() => {
+                introOverlay.classList.add('fade-out');
+                mainContent.classList.add('visible');
+
+                // Confetti & Fireworks burst on Grand Reveal
+                createConfettiBurst(120);
+                setTimeout(() => triggerFirework(width * 0.3, height * 0.3), 300);
+                setTimeout(() => triggerFirework(width * 0.7, height * 0.3), 600);
+
+                // Start Typewriter
+                startTypewriter();
+            }, 800);
+        });
+
+        /* --------------------------------------------------------------------------
+           4. TYPEWRITER ANIMATION
+           -------------------------------------------------------------------------- */
+        const messageText = `Dear Sandini,
+
+On this special day, I want to remind you how incredibly wonderful you are. Your presence brings warmth, joy, and brightness into the lives of everyone around you.
+
+May your year ahead be blessed with pure happiness, thrilling adventures, and dreams coming true. Always keep smiling! 🌟✨`;
+
+        const typewriterEl = document.getElementById('typewriter');
+        let charIndex = 0;
+
+        function startTypewriter() {
+            if (charIndex < messageText.length) {
+                typewriterEl.textContent += messageText.charAt(charIndex);
+                charIndex++;
+                setTimeout(startTypewriter, 40);
+            }
+        }
+
+        /* --------------------------------------------------------------------------
+           5. CAKE CUTTING INTERACTION
+           -------------------------------------------------------------------------- */
+        const cake = document.getElementById('interactive-cake');
+        const cakeStatus = document.getElementById('cake-status');
+
+        cake.addEventListener('click', (e) => {
+            cake.classList.add('cut');
+            sound.playPop();
+            createConfettiBurst(80);
+
+            // Firework above cake
+            const rect = cake.getBoundingClientRect();
+            triggerFirework(rect.left + rect.width / 2, rect.top - 20);
+
+            cakeStatus.textContent = "🎉 Wish Granted! Happy Birthday Sandini! ❤️";
+            cakeStatus.style.color = "var(--primary-pink)";
+        });
+
+        /* --------------------------------------------------------------------------
+           6. AUDIO TOGGLE BUTTON CONTROLLER
+           -------------------------------------------------------------------------- */
+        const audioBtn = document.getElementById('audio-toggle');
+        let audioActive = false;
+
+        audioBtn.addEventListener('click', () => {
+            if (!audioActive) {
+                sound.playPianoMelody();
+                audioBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                audioActive = true;
+            } else {
+                sound.stop();
+                audioBtn.innerHTML = '<i class="fas fa-music"></i>';
+                audioActive = false;
+            }
+        });
+
+    </script>
+</body>
+</html>
