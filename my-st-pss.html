@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Famous Hair Salon | Staff & Manager Portal</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gold: { 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' }
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body { background-color: #09090b; color: #e4e4e7; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .glass-card { background: rgba(18, 18, 22, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(245, 158, 11, 0.15); }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-black">
+
+  <div id="toast-container" class="fixed top-4 right-4 z-[9999] flex flex-col gap-2 max-w-[90vw] pointer-events-none"></div>
+
+  <!-- LOGIN SCREEN -->
+  <div id="login-view" class="flex-1 flex items-center justify-center p-4">
+    <div class="w-full max-w-sm glass-card rounded-3xl p-6 sm:p-8 text-center shadow-2xl border border-zinc-800">
+      <div class="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center mx-auto mb-4 border border-amber-500/30">
+        <i data-lucide="shield-check" class="w-7 h-7"></i>
+      </div>
+      <h1 class="text-xl font-serif font-bold text-white mb-1">Famous Hair Salon</h1>
+      <p class="text-xs text-amber-400 font-mono mb-6">Staff & Manager Portal</p>
+
+      <form onsubmit="handleLogin(event)" class="space-y-4">
+        <div class="text-left">
+          <label class="block text-[11px] font-semibold text-zinc-400 uppercase tracking-wider mb-1.5">Security Passcode</label>
+          <input 
+            type="password" 
+            id="passcode-input" 
+            required 
+            placeholder="••••••••" 
+            class="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 text-center text-white tracking-widest text-lg focus:border-amber-400 focus:outline-none transition"
+          />
+        </div>
+        <button type="submit" class="w-full py-3 rounded-xl text-xs uppercase tracking-widest font-bold bg-gradient-to-r from-amber-400 to-amber-600 text-black hover:brightness-110 active:scale-95 transition">
+          Unlock Dashboard
+        </button>
+      </form>
+
+      <div class="mt-6 pt-4 border-t border-zinc-800/80 text-[11px] text-zinc-500">
+        1010 Cherry St, Philadelphia, PA
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD SCREEN -->
+  <div id="dashboard-view" class="hidden flex-1 flex flex-col">
+    <!-- Header -->
+    <header class="border-b border-zinc-800 bg-zinc-950/80 sticky top-0 z-40 backdrop-blur-md">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+            <i data-lucide="scissors" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h2 class="text-sm sm:text-base font-serif font-bold text-white leading-none">Famous Hair Salon</h2>
+            <span class="text-[10px] text-amber-400 font-mono">Control Center</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <a href="index.html" target="_blank" class="hidden sm:flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-zinc-800 text-zinc-300 hover:text-white transition">
+            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+            <span>Customer Website</span>
+          </a>
+          <button onclick="promptChangePasscode()" class="text-xs px-2.5 sm:px-3 py-1.5 rounded-lg border border-amber-500/30 text-amber-400 hover:bg-amber-500/10 transition">
+            Change PIN
+          </button>
+          <button onclick="handleLogout()" class="text-xs px-2.5 sm:px-3 py-1.5 rounded-lg border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition">
+            Logout
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 flex-1 w-full space-y-6">
+      <!-- Metrics Ribbon -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+        <div class="glass-card p-3.5 sm:p-4 rounded-2xl">
+          <span class="text-[10px] uppercase tracking-wider text-zinc-400 block">Total Bookings</span>
+          <div id="stat-bookings" class="text-xl sm:text-2xl font-bold font-serif text-amber-400 mt-0.5">0</div>
+        </div>
+        <div class="glass-card p-3.5 sm:p-4 rounded-2xl">
+          <span class="text-[10px] uppercase tracking-wider text-zinc-400 block">Active Services</span>
+          <div id="stat-services" class="text-xl sm:text-2xl font-bold font-serif text-white mt-0.5">0</div>
+        </div>
+        <div class="glass-card p-3.5 sm:p-4 rounded-2xl">
+          <span class="text-[10px] uppercase tracking-wider text-zinc-400 block">Lookbook Photos</span>
+          <div id="stat-portfolio" class="text-xl sm:text-2xl font-bold font-serif text-white mt-0.5">0</div>
+        </div>
+        <div class="glass-card p-3.5 sm:p-4 rounded-2xl flex flex-col justify-between">
+          <span class="text-[10px] uppercase tracking-wider text-zinc-400 block">Storage Sync</span>
+          <div class="text-xs font-semibold text-emerald-400 flex items-center gap-1.5 mt-1">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live Linked
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="flex items-center gap-2 border-b border-zinc-800 pb-2 overflow-x-auto no-scrollbar">
+        <button onclick="switchTab('bookings')" id="tab-btn-bookings" class="px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-amber-400 text-black transition">
+          Customer Orders / Bookings
+        </button>
+        <button onclick="switchTab('services')" id="tab-btn-services" class="px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap text-zinc-400 hover:text-white transition">
+          Services & Pricing
+        </button>
+        <button onclick="switchTab('gallery')" id="tab-btn-gallery" class="px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap text-zinc-400 hover:text-white transition">
+          Portfolio Lookbook
+        </button>
+      </div>
+
+      <!-- TAB 1: CUSTOMER ORDERS (DUAL VIEW: MOBILE CARDS + DESKTOP TABLE) -->
+      <div id="tab-bookings" class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="calendar" class="w-4 h-4 text-amber-400"></i> Client Appointments
+          </h3>
+          <button onclick="resetDataToFactoryDefaults()" class="text-[11px] text-zinc-400 hover:text-red-400 transition">
+            Reset Sample Data
+          </button>
+        </div>
+
+        <!-- 1. Mobile Cards View (Phones) -->
+        <div id="bookings-mobile-container" class="md:hidden space-y-3"></div>
+
+        <!-- 2. Desktop Wide Table View (Laptops) -->
+        <div class="hidden md:block overflow-x-auto rounded-2xl border border-zinc-800">
+          <table class="w-full text-left text-xs min-w-[700px]">
+            <thead class="bg-zinc-900 text-zinc-400 uppercase tracking-wider font-semibold border-b border-zinc-800">
+              <tr>
+                <th class="px-4 py-3">Ref ID</th>
+                <th class="px-4 py-3">Client</th>
+                <th class="px-4 py-3">Contact</th>
+                <th class="px-4 py-3">Service</th>
+                <th class="px-4 py-3">Date & Time</th>
+                <th class="px-4 py-3">Notes</th>
+                <th class="px-4 py-3">Status</th>
+                <th class="px-4 py-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="bookings-table-body" class="divide-y divide-zinc-800 bg-zinc-950/60 text-zinc-300"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 2: SERVICES & PRICING -->
+      <div id="tab-services" class="hidden space-y-6">
+        <div class="glass-card p-4 sm:p-6 rounded-2xl border border-zinc-800">
+          <h4 id="service-form-title" class="text-xs sm:text-sm font-bold text-amber-400 uppercase tracking-wider mb-4">
+            Add New Salon Service
+          </h4>
+          <form id="service-form" onsubmit="handleSaveService(event)" class="space-y-4">
+            <input type="hidden" id="service-form-id" value="" />
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label class="block text-[11px] text-zinc-400 mb-1">Service Title *</label>
+                <input type="text" id="service-name" required placeholder="e.g. Master Balayage" class="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs focus:border-amber-400 focus:outline-none" />
+              </div>
+              <div>
+                <label class="block text-[11px] text-zinc-400 mb-1">Category *</label>
+                <select id="service-category" required class="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs focus:border-amber-400 focus:outline-none">
+                  <option value="cut">Cuts & Styling</option>
+                  <option value="color">Color & Balayage</option>
+                  <option value="perm">Perms & Straightening</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[11px] text-zinc-400 mb-1">Price ($ USD) *</label>
+                <input type="number" id="service-price" required min="1" step="1" placeholder="180" class="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs focus:border-amber-400 focus:outline-none" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[11px] text-zinc-400 mb-1">Image URL *</label>
+              <input type="url" id="service-image" required placeholder="https://images.unsplash.com/..." class="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs focus:border-amber-400 focus:outline-none" />
+            </div>
+
+            <div>
+              <label class="block text-[11px] text-zinc-400 mb-1">Description *</label>
+              <textarea id="service-desc" required rows="2" placeholder="Summary and benefits..." class="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs focus:border-amber-400 focus:outline-none"></textarea>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button type="submit" class="px-5 py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider bg-amber-400 text-black hover:bg-amber-300 transition">
+                Save Service Live
+              </button>
+              <button type="button" onclick="cancelEditService()" id="cancel-edit-btn" class="hidden px-4 py-2.5 rounded-xl text-xs text-zinc-400 hover:text-white border border-zinc-800">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-3">Live Active Services</h4>
+          <div id="admin-services-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+        </div>
+      </div>
+
+      <!-- TAB 3: PORTFOLIO LOOKBOOK -->
+      <div id="tab-gallery" class="hidden space-y-6">
+        <div class="glass-card p-4 sm:p-6 rounded-2xl border border-zinc-800">
+          <h4 class="text-xs sm:text-sm font-bold text-amber-400 uppercase tracking-wider mb-3">Add Lookbook Image</h4>
+          <form onsubmit="handleAddPhoto(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-[11px] text-zinc-400 mb-1">Style Caption *</label>
+              <input type="text" id="photo-caption" required placeholder="e.g. Ash Toner & Waves" class="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs focus:border-amber-400 focus:outline-none" />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-[11px] text-zinc-400 mb-1">Image URL *</label>
+              <div class="flex gap-2">
+                <input type="url" id="photo-url" required placeholder="https://images.unsplash.com/..." class="w-full px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-xs focus:border-amber-400 focus:outline-none" />
+                <button type="submit" class="px-4 py-2 rounded-lg text-xs font-semibold bg-amber-400 text-black hover:bg-amber-300 shrink-0">
+                  Add Photo
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-bold text-white uppercase tracking-wider mb-3">Manage Photos</h4>
+          <div id="admin-gallery-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const DEFAULT_SERVICES = [
+      { id: "srv-1", name: "Japanese Thermal Straightening", category: "perm", price: 320, description: "Permanent silk rebonding treatment designed to transform curly, coarse hair into mirror-shine, pin-straight strands resistant to humidity.", image: "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=800&q=80" },
+      { id: "srv-2", name: "Signature Balayage & Glaze", category: "color", price: 240, description: "Custom hand-painted French balayage technique with bespoke gloss toner for seamless, sun-kissed dimensional movement and soft regrowth.", image: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=800&q=80" },
+      { id: "srv-3", name: "Korean Digital Wave Perm", category: "perm", price: 210, description: "Modern temperature-controlled digital perm creating natural, effortless beach waves and voluminous texture with soft hold.", image: "https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=800&q=80" },
+      { id: "srv-4", name: "Master Precision Cut & Blowout", category: "cut", price: 75, description: "Comprehensive structural haircut tailored to face contours and hair texture, accompanied by an aromatic shampoo and signature blowout.", image: "https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?auto=format&fit=crop&w=800&q=80" },
+      { id: "srv-5", name: "Full Platinum Bleach & Tone", category: "color", price: 280, description: "Precision root-to-end lightning followed by neutralizing violet or ash pearl toner, enriched with bond-protecting plex treatment.", image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80" },
+      { id: "srv-6", name: "Gentleman's Fade & Scissor Cut", category: "cut", price: 45, description: "Clean skin taper or drop fade with tailored scissor texturizing on top, finished with cooling scalp tonic and styling paste.", image: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=800&q=80" }
+    ];
+
+    const DEFAULT_PORTFOLIO = [
+      { id: "img-1", title: "Dimensional Ash Caramel Balayage", url: "https://images.unsplash.com/photo-1560869713-7d0a29430803?auto=format&fit=crop&w=800&q=80" },
+      { id: "img-2", title: "Japanese Thermal Rebonding", url: "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=800&q=80" },
+      { id: "img-3", title: "Korean Digital Mermaid Waves", url: "https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=800&q=80" },
+      { id: "img-4", title: "Platinum Ice Blonde Foilayage", url: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80" }
+    ];
+
+    const DEFAULT_BOOKINGS = [
+      { id: "FHS-8921", name: "Jessica Chen", email: "jessica.c@gmail.com", phone: "+1 215-555-0142", service: "Japanese Thermal Straightening", date: "2025-04-10", time: "11:30 AM", notes: "Very thick Asian hair, past shoulder length.", status: "Confirmed" },
+      { id: "FHS-8922", name: "David Ross", email: "d.ross@phillytech.io", phone: "+1 267-555-8391", service: "Gentleman's Fade & Scissor Cut", date: "2025-04-11", time: "02:30 PM", notes: "Mid drop fade and styling.", status: "Confirmed" }
+    ];
+
+    function getStorage(k, fb) {
+      try { const s = localStorage.getItem(k); return s ? JSON.parse(s) : fb; } catch (e) { return fb; }
+    }
+    function setStorage(k, v) {
+      try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { console.error(e); }
+    }
+
+    let services = getStorage("famous_salon_services", DEFAULT_SERVICES);
+    let portfolio = getStorage("famous_salon_portfolio", DEFAULT_PORTFOLIO);
+    let bookings = getStorage("famous_salon_bookings", DEFAULT_BOOKINGS);
+
+    function showToast(msg, isErr = false) {
+      const c = document.getElementById("toast-container");
+      const el = document.createElement("div");
+      el.className = `pointer-events-auto px-4 py-2.5 rounded-xl border text-xs font-medium bg-zinc-950 text-white shadow-2xl transition-all duration-300 ${isErr ? 'border-red-500/50 text-red-300' : 'border-amber-500/50 text-amber-300'}`;
+      el.innerText = msg;
+      c.appendChild(el);
+      setTimeout(() => el.remove(), 3200);
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const pin = document.getElementById("passcode-input").value.trim();
+      const currentPin = localStorage.getItem("famous_admin_pin") || "admin123";
+      
+      if (pin === currentPin) {
+        sessionStorage.setItem("famous_authenticated", "true");
+        document.getElementById("login-view").classList.add("hidden");
+        document.getElementById("dashboard-view").classList.remove("hidden");
+        updateDashboard();
+        showToast("Authenticated successfully");
+      } else {
+        showToast("Invalid passcode!", true);
+      }
+    }
+
+    function handleLogout() {
+      sessionStorage.removeItem("famous_authenticated");
+      document.getElementById("passcode-input").value = "";
+      document.getElementById("dashboard-view").classList.add("hidden");
+      document.getElementById("login-view").classList.remove("hidden");
+      showToast("Logged out");
+    }
+
+    function promptChangePasscode() {
+      const newPin = prompt("Enter new secret PIN (at least 4 characters):");
+      if (newPin && newPin.trim().length >= 4) {
+        localStorage.setItem("famous_admin_pin", newPin.trim());
+        showToast("Security PIN updated successfully!");
+      } else if (newPin !== null) {
+        showToast("PIN must be at least 4 characters", true);
+      }
+    }
+
+    function switchTab(tab) {
+      ["bookings", "services", "gallery"].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.add("hidden");
+        document.getElementById(`tab-btn-${t}`).className = "px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap text-zinc-400 hover:text-white transition";
+      });
+      document.getElementById(`tab-${tab}`).classList.remove("hidden");
+      document.getElementById(`tab-btn-${tab}`).className = "px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap bg-amber-400 text-black transition";
+      lucide.createIcons();
+    }
+
+    function updateDashboard() {
+      document.getElementById("stat-bookings").innerText = bookings.length;
+      document.getElementById("stat-services").innerText = services.length;
+      document.getElementById("stat-portfolio").innerText = portfolio.length;
+      renderBookings();
+      renderServices();
+      renderPortfolio();
+      lucide.createIcons();
+    }
+
+    function renderBookings() {
+      const mob = document.getElementById("bookings-mobile-container");
+      const dsk = document.getElementById("bookings-table-body");
+
+      if (bookings.length === 0) {
+        mob.innerHTML = `<div class="p-6 text-center text-zinc-400 text-xs">No bookings found.</div>`;
+        dsk.innerHTML = `<tr><td colspan="8" class="text-center py-6 text-zinc-400 text-xs">No bookings found.</td></tr>`;
+        return;
+      }
+
+      mob.innerHTML = bookings.map(b => `
+        <div class="glass-card rounded-2xl p-3.5 border border-zinc-800 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="font-mono text-xs font-bold text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded">${b.id}</span>
+            <div class="flex items-center gap-1.5">
+              <select onchange="updateBookingStatus('${b.id}', this.value)" class="bg-zinc-900 border border-zinc-700 text-[11px] rounded-lg px-2 py-1 text-white">
+                <option value="Pending" ${b.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                <option value="Confirmed" ${b.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
+                <option value="Completed" ${b.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                <option value="Cancelled" ${b.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+              </select>
+              <button onclick="deleteBooking('${b.id}')" class="p-1.5 text-zinc-400 hover:text-red-400">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+          <div>
+            <h5 class="text-sm font-bold text-white">${b.name}</h5>
+            <p class="text-xs text-amber-300 font-medium">${b.service}</p>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-[11px] pt-1 border-t border-zinc-800 text-zinc-300">
+            <div class="flex items-center gap-1"><i data-lucide="calendar" class="w-3.5 h-3.5 text-amber-400"></i>${b.date}</div>
+            <div class="flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i>${b.time}</div>
+          </div>
+          <div class="flex items-center justify-between text-[11px] text-zinc-400 pt-1">
+            <a href="tel:${b.phone}" class="flex items-center gap-1 text-zinc-300 hover:text-amber-400">
+              <i data-lucide="phone" class="w-3 h-3 text-amber-400"></i> ${b.phone}
+            </a>
+            <span class="truncate max-w-[130px]" title="${b.notes}">Note: ${b.notes || '—'}</span>
+          </div>
+        </div>
+      `).join('');
+
+      dsk.innerHTML = bookings.map(b => `
+        <tr class="hover:bg-zinc-900/50">
+          <td class="px-4 py-3 font-mono text-xs text-amber-400 font-bold">${b.id}</td>
+          <td class="px-4 py-3 font-medium text-white">${b.name}</td>
+          <td class="px-4 py-3 text-zinc-300 text-[11px]">
+            <div>${b.phone}</div>
+            <div class="text-zinc-400 text-[10px]">${b.email}</div>
+          </td>
+          <td class="px-4 py-3 text-zinc-200 font-medium">${b.service}</td>
+          <td class="px-4 py-3 whitespace-nowrap">
+            <span class="text-white">${b.date}</span>
+            <span class="text-zinc-400 block text-[10px]">${b.time}</span>
+          </td>
+          <td class="px-4 py-3 max-w-xs truncate text-zinc-400" title="${b.notes}">${b.notes || "—"}</td>
+          <td class="px-4 py-3">
+            <select onchange="updateBookingStatus('${b.id}', this.value)" class="bg-zinc-900 border border-zinc-700 text-xs rounded px-2 py-1 text-white">
+              <option value="Pending" ${b.status === 'Pending' ? 'selected' : ''}>Pending</option>
+              <option value="Confirmed" ${b.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
+              <option value="Completed" ${b.status === 'Completed' ? 'selected' : ''}>Completed</option>
+              <option value="Cancelled" ${b.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+            </select>
+          </td>
+          <td class="px-4 py-3 text-right">
+            <button onclick="deleteBooking('${b.id}')" class="p-1.5 text-zinc-400 hover:text-red-400">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    function updateBookingStatus(id, st) {
+      bookings = bookings.map(b => b.id === id ? { ...b, status: st } : b);
+      setStorage("famous_salon_bookings", bookings);
+      renderBookings();
+      showToast(`Status updated: ${st}`);
+    }
+
+    function deleteBooking(id) {
+      if (!confirm(`Delete appointment #${id}?`)) return;
+      bookings = bookings.filter(b => b.id !== id);
+      setStorage("famous_salon_bookings", bookings);
+      updateDashboard();
+      showToast("Booking deleted");
+    }
+
+    function renderServices() {
+      const c = document.getElementById("admin-services-grid");
+      c.innerHTML = services.map(s => `
+        <div class="glass-card p-3 rounded-xl flex items-center justify-between gap-3 border border-zinc-800">
+          <div class="flex items-center gap-2.5 overflow-hidden">
+            <img src="${s.image}" class="w-11 h-11 rounded-lg object-cover shrink-0" onerror="this.src='https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=150&q=80'" />
+            <div class="truncate">
+              <div class="text-xs font-bold text-white truncate">${s.name}</div>
+              <div class="text-[11px] text-amber-400 font-serif">$${s.price} <span class="text-zinc-400 font-sans">• ${s.category}</span></div>
+            </div>
+          </div>
+          <div class="flex items-center gap-1 shrink-0">
+            <button onclick="startEditService('${s.id}')" class="p-1.5 text-zinc-400 hover:text-amber-400"><i data-lucide="edit-3" class="w-3.5 h-3.5"></i></button>
+            <button onclick="deleteService('${s.id}')" class="p-1.5 text-zinc-400 hover:text-red-400"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function handleSaveService(e) {
+      e.preventDefault();
+      const id = document.getElementById("service-form-id").value;
+      const srv = {
+        id: id || ("srv-" + Date.now()),
+        name: document.getElementById("service-name").value.trim(),
+        category: document.getElementById("service-category").value,
+        price: parseFloat(document.getElementById("service-price").value),
+        image: document.getElementById("service-image").value.trim(),
+        description: document.getElementById("service-desc").value.trim()
+      };
+
+      if (id) {
+        services = services.map(s => s.id === id ? srv : s);
+      } else {
+        services.unshift(srv);
+      }
+
+      setStorage("famous_salon_services", services);
+      cancelEditService();
+      updateDashboard();
+      showToast("Service saved!");
+    }
+
+    function startEditService(id) {
+      const s = services.find(x => x.id === id);
+      if (!s) return;
+      document.getElementById("service-form-title").innerText = "Edit Service";
+      document.getElementById("service-form-id").value = s.id;
+      document.getElementById("service-name").value = s.name;
+      document.getElementById("service-category").value = s.category;
+      document.getElementById("service-price").value = s.price;
+      document.getElementById("service-image").value = s.image;
+      document.getElementById("service-desc").value = s.description;
+      document.getElementById("cancel-edit-btn").classList.remove("hidden");
+    }
+
+    function cancelEditService() {
+      document.getElementById("service-form-title").innerText = "Add New Salon Service";
+      document.getElementById("service-form-id").value = "";
+      document.getElementById("service-form").reset();
+      document.getElementById("cancel-edit-btn").classList.add("hidden");
+    }
+
+    function deleteService(id) {
+      if (!confirm("Delete service from public website?")) return;
+      services = services.filter(s => s.id !== id);
+      setStorage("famous_salon_services", services);
+      updateDashboard();
+      showToast("Service deleted");
+    }
+
+    function renderPortfolio() {
+      const c = document.getElementById("admin-gallery-grid");
+      c.innerHTML = portfolio.map(item => `
+        <div class="relative group rounded-xl overflow-hidden aspect-square bg-zinc-900 border border-zinc-800">
+          <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover" />
+          <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition flex flex-col justify-between p-2">
+            <span class="text-[9px] text-white truncate">${item.title}</span>
+            <button onclick="deletePhoto('${item.id}')" class="self-end p-1 bg-red-600/80 text-white rounded"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function handleAddPhoto(e) {
+      e.preventDefault();
+      portfolio.unshift({
+        id: "img-" + Date.now(),
+        title: document.getElementById("photo-caption").value.trim(),
+        url: document.getElementById("photo-url").value.trim()
+      });
+      setStorage("famous_salon_portfolio", portfolio);
+      e.target.reset();
+      updateDashboard();
+      showToast("Photo added to Lookbook");
+    }
+
+    function deletePhoto(id) {
+      if (!confirm("Delete photo?")) return;
+      portfolio = portfolio.filter(p => p.id !== id);
+      setStorage("famous_salon_portfolio", portfolio);
+      updateDashboard();
+      showToast("Photo removed");
+    }
+
+    function resetDataToFactoryDefaults() {
+      if (!confirm("Reset all services, sample bookings and images to default?")) return;
+      services = [...DEFAULT_SERVICES];
+      portfolio = [...DEFAULT_PORTFOLIO];
+      bookings = [...DEFAULT_BOOKINGS];
+      setStorage("famous_salon_services", services);
+      setStorage("famous_salon_portfolio", portfolio);
+      setStorage("famous_salon_bookings", bookings);
+      updateDashboard();
+      showToast("Reset to factory defaults completed");
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      if (sessionStorage.getItem("famous_authenticated") === "true") {
+        document.getElementById("login-view").classList.add("hidden");
+        document.getElementById("dashboard-view").classList.remove("hidden");
+        updateDashboard();
+      } else {
+        lucide.createIcons();
+      }
+    });
+  </script>
+</body>
+</html>

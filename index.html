@@ -1,1059 +1,742 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Happy Birthday Beautiful Sandini ❤️</title>
-    
-    <!-- Google Fonts & FontAwesome CDN -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;600;700&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        /* ==========================================================================
-           1. GLOBAL RESET & STYLES
-           ========================================================================== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        :root {
-            --primary-pink: #ff4d8d;
-            --soft-pink: #ffd1dc;
-            --gold: #ffd700;
-            --rose-gold: #e5a93c;
-            --bg-dark: #0b091a;
-            --glass-bg: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.18);
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-
-        html {
-            scroll-behavior: smooth;
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--bg-dark);
-            color: #ffffff;
-            overflow-x: hidden;
-        }
-
-        body {
-            background: linear-gradient(135deg, #0b091a 0%, #1a0b2e 50%, #2a0826 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* Ambient Canvas overlay */
-        #particle-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 50;
-        }
-
-        /* ==========================================================================
-           2. INTRO CURTAIN & CANDLE BLOW EXPERIENCE
-           ========================================================================== */
-        #intro-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #030208;
-            z-index: 99999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 1.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.5s;
-        }
-
-        #intro-overlay.fade-out {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .candle-container {
-            position: relative;
-            cursor: pointer;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .candle {
-            width: 45px;
-            height: 140px;
-            background: linear-gradient(to right, #e0e0e0, #ffffff, #dcdcdc);
-            border-radius: 8px 8px 4px 4px;
-            position: relative;
-            margin: 0 auto;
-            box-shadow: inset 0 5px 10px rgba(0,0,0,0.1), 0 0 20px rgba(255,255,255,0.2);
-        }
-
-        .wick {
-            width: 4px;
-            height: 16px;
-            background-color: #444;
-            position: absolute;
-            top: -16px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 2px;
-        }
-
-        .flame {
-            width: 24px;
-            height: 36px;
-            background: radial-gradient(ellipse at bottom, #ffee55 0%, #ff8800 50%, rgba(255,0,0,0) 100%);
-            border-radius: 50% 50% 35% 35% / 60% 60% 40% 40%;
-            position: absolute;
-            top: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: flicker 1.2s infinite alternate ease-in-out;
-            box-shadow: 0 0 20px #ff9900, 0 0 40px #ff5500, 0 0 60px #ff2200;
-        }
-
-        @keyframes flicker {
-            0% { transform: translateX(-50%) scale(1) rotate(-1deg); opacity: 0.95; }
-            50% { transform: translateX(-50%) scale(1.08) rotate(1deg); opacity: 1; }
-            100% { transform: translateX(-50%) scale(0.95) rotate(-2deg); opacity: 0.9; }
-        }
-
-        .flame.extinguished {
-            display: none;
-        }
-
-        .intro-text {
-            margin-top: 40px;
-            font-size: 1.2rem;
-            color: var(--soft-pink);
-            letter-spacing: 1px;
-            text-align: center;
-            font-weight: 300;
-            animation: pulseText 2s infinite ease-in-out;
-            padding: 0 20px;
-        }
-
-        @keyframes pulseText {
-            0%, 100% { opacity: 0.6; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.03); }
-        }
-
-        /* ==========================================================================
-           3. MAIN LAYOUT & WRAPPER
-           ========================================================================== */
-        #main-content {
-            opacity: 0;
-            transition: opacity 1.5s ease-in;
-            position: relative;
-            z-index: 10;
-        }
-
-        #main-content.visible {
-            opacity: 1;
-        }
-
-        section {
-            padding: 70px 20px;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            font-family: 'Dancing Script', cursive;
-            font-size: 3rem;
-            text-align: center;
-            color: var(--soft-pink);
-            margin-bottom: 40px;
-            text-shadow: 0 0 10px rgba(255, 77, 141, 0.5);
-        }
-
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            box-shadow: var(--glass-shadow);
-            padding: 30px;
-            margin-bottom: 30px;
-            transition: transform 0.4s ease, box-shadow 0.4s ease;
-        }
-
-        .glass-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px 0 rgba(255, 77, 141, 0.25);
-        }
-
-        /* ==========================================================================
-           4. HERO SECTION
-           ========================================================================== */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            padding-top: 40px;
-        }
-
-        .grand-title {
-            font-family: 'Cinzel', serif;
-            font-size: 1.5rem;
-            letter-spacing: 4px;
-            color: var(--gold);
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            animation: fadeInDown 1.2s ease;
-        }
-
-        .name-title {
-            font-family: 'Dancing Script', cursive;
-            font-size: 4.5rem;
-            font-weight: 700;
-            background: linear-gradient(45deg, #ff4d8d, #ffd700, #ff85a2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 30px;
-            filter: drop-shadow(0 0 15px rgba(255,77,141,0.4));
-        }
-
-        .hero-img-container {
-            position: relative;
-            width: 280px;
-            height: 380px;
-            margin: 0 auto 30px auto;
-            border-radius: 25px;
-            padding: 8px;
-            background: linear-gradient(45deg, var(--primary-pink), var(--gold));
-            box-shadow: 0 0 30px rgba(255, 77, 141, 0.5);
-            animation: floatHero 4s infinite ease-in-out;
-        }
-
-        @keyframes floatHero {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-12px); }
-        }
-
-        .hero-img-box {
-            width: 100%;
-            height: 100%;
-            border-radius: 18px;
-            overflow: hidden;
-            position: relative;
-            background: #150d2a;
-        }
-
-        .hero-img-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.8s ease;
-        }
-
-        .hero-img-container:hover .hero-img-box img {
-            transform: scale(1.08);
-        }
-
-        .hero-quote {
-            font-size: 1.1rem;
-            color: #e2e2e2;
-            max-width: 650px;
-            line-height: 1.8;
-            font-weight: 300;
-            margin: 0 auto;
-        }
-
-        /* ==========================================================================
-           5. TYPEWRITER BIRTHDAY MESSAGE SECTION
-           ========================================================================== */
-        .typewriter-card {
-            max-width: 800px;
-            margin: 0 auto;
-            min-height: 220px;
-            position: relative;
-        }
-
-        .typewriter-text {
-            font-size: 1.15rem;
-            line-height: 2;
-            color: #f8f8f8;
-            font-weight: 300;
-            white-space: pre-wrap;
-            border-right: 2px solid var(--primary-pink);
-            animation: blinkCursor 0.8s infinite;
-        }
-
-        @keyframes blinkCursor {
-            0%, 100% { border-color: transparent; }
-            50% { border-color: var(--primary-pink); }
-        }
-
-        /* ==========================================================================
-           6. MEMORY GALLERY
-           ========================================================================== */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .gallery-item {
-            position: relative;
-            height: 320px;
-            border-radius: 16px;
-            overflow: hidden;
-            cursor: pointer;
-            border: 1px solid var(--glass-border);
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        .gallery-item:hover img {
-            transform: scale(1.12);
-        }
-
-        .gallery-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            padding: 20px;
-            background: linear-gradient(to top, rgba(11,9,26,0.9), transparent);
-            transform: translateY(100%);
-            transition: transform 0.4s ease;
-        }
-
-        .gallery-item:hover .gallery-overlay {
-            transform: translateY(0);
-        }
-
-        .gallery-overlay h4 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 1.6rem;
-            color: var(--soft-pink);
-        }
-
-        /* ==========================================================================
-           7. WISHES GRID
-           ========================================================================== */
-        .wishes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-        }
-
-        .wish-card {
-            text-align: center;
-            padding: 35px 25px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .wish-icon {
-            font-size: 2.5rem;
-            color: var(--gold);
-            margin-bottom: 15px;
-        }
-
-        .wish-card h3 {
-            font-size: 1.3rem;
-            color: var(--soft-pink);
-            margin-bottom: 12px;
-        }
-
-        .wish-card p {
-            font-size: 0.95rem;
-            color: #cccccc;
-            line-height: 1.6;
-        }
-
-        /* ==========================================================================
-           8. INTERACTIVE BIRTHDAY CAKE
-           ========================================================================== */
-        .cake-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .cake {
-            position: relative;
-            width: 220px;
-            height: 200px;
-            cursor: pointer;
-        }
-
-        .cake-plate {
-            width: 260px;
-            height: 16px;
-            background: #e0e0e0;
-            border-radius: 10px;
-            position: absolute;
-            bottom: 0;
-            left: -20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-
-        .layer {
-            position: absolute;
-            width: 100%;
-            border-radius: 12px 12px 0 0;
-        }
-
-        .layer-bottom {
-            height: 70px;
-            bottom: 16px;
-            background: linear-gradient(to right, #ff758c, #ff7eb3);
-        }
-
-        .layer-middle {
-            height: 60px;
-            bottom: 86px;
-            width: 80%;
-            left: 10%;
-            background: linear-gradient(to right, #ffffff, #ffe5ec);
-        }
-
-        .layer-top {
-            height: 50px;
-            bottom: 146px;
-            width: 60%;
-            left: 20%;
-            background: linear-gradient(to right, #ff758c, #ff7eb3);
-        }
-
-        .icing {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 15px;
-            background: #ffffff;
-            border-radius: 10px 10px 5px 5px;
-        }
-
-        .cake-candle {
-            width: 10px;
-            height: 30px;
-            background: repeating-linear-gradient(45deg, #ffd700, #ffd700 5px, #ffffff 5px, #ffffff 10px);
-            position: absolute;
-            top: 116px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 3px;
-        }
-
-        .cake-flame {
-            width: 10px;
-            height: 15px;
-            background: #ffaa00;
-            border-radius: 50%;
-            position: absolute;
-            top: -15px;
-            left: 0;
-            box-shadow: 0 0 10px #ffaa00;
-            animation: flicker 1s infinite alternate;
-        }
-
-        .cake-cut-msg {
-            margin-top: 25px;
-            font-size: 1.1rem;
-            color: var(--gold);
-            font-weight: 400;
-        }
-
-        /* Slice Animation state */
-        .cake.cut .layer-top {
-            transform: translateY(-5px);
-            transition: transform 0.5s ease;
-        }
-
-        /* ==========================================================================
-           9. FOOTER / ENDING
-           ========================================================================== */
-        footer {
-            text-align: center;
-            padding: 60px 20px 40px 20px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .final-wish {
-            font-family: 'Dancing Script', cursive;
-            font-size: 3.2rem;
-            color: var(--soft-pink);
-            margin-bottom: 15px;
-            text-shadow: 0 0 20px rgba(255,77,141,0.6);
-        }
-
-        .credit-text {
-            font-size: 1rem;
-            color: #aaaaaa;
-            letter-spacing: 1px;
-        }
-
-        .credit-text span {
-            color: var(--primary-pink);
-        }
-
-        /* Floating Audio Control */
-        .audio-btn {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            cursor: pointer;
-            z-index: 999;
-            box-shadow: var(--glass-shadow);
-            transition: transform 0.3s ease;
-        }
-
-        .audio-btn:hover {
-            transform: scale(1.1);
-        }
-
-        /* Responsive Breakpoints */
-        @media (max-width: 768px) {
-            .name-title { font-size: 3.2rem; }
-            .section-title { font-size: 2.4rem; }
-            .hero-img-container { width: 230px; height: 310px; }
-            .final-wish { font-size: 2.3rem; }
-            section { padding: 50px 15px; }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Famous Hair Salon | Luxury Hair Studio Philadelphia</title>
+  <meta name="description" content="Famous Hair Salon - Premier luxury salon located at 1010 Cherry St, Philadelphia. Precision cuts, bespoke color, Japanese straightening, and bespoke hair treatments." />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gold: { 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' }
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body { background-color: #09090b; color: #e4e4e7; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; }
+    h1, h2, h3 { font-family: 'Playfair Display', Georgia, serif; }
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #fde68a 0%, #fbbf24 50%, #d97706 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .glass-card {
+      background: rgba(18, 18, 22, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(245, 158, 11, 0.12);
+    }
+    .glass-card-hover {
+      transition: all 0.35s ease;
+    }
+    .glass-card-hover:hover {
+      border-color: rgba(245, 158, 11, 0.4);
+      transform: translateY(-3px);
+    }
+  </style>
 </head>
-<body>
+<body class="relative min-h-screen selection:bg-amber-500 selection:text-black">
 
-    <!-- Ambient Particle Canvas for Confetti/Fireworks/Petals -->
-    <canvas id="particle-canvas"></canvas>
+  <div id="toast-container" class="fixed top-4 right-4 sm:top-6 sm:right-6 z-[9999] flex flex-col gap-2 max-w-[90vw] pointer-events-none"></div>
 
-    <!-- Floating Audio Toggle Button -->
-    <button class="audio-btn" id="audio-toggle" title="Toggle Music">
-        <i class="fas me fa-music"></i>
-    </button>
-
-    <!-- INTRO OVERLAY (Candle Blow) -->
-    <div id="intro-overlay">
-        <div class="candle-container" id="candle-trigger">
-            <div class="candle">
-                <div class="wick"></div>
-                <div class="flame" id="main-flame"></div>
-            </div>
-            <p class="intro-text">Tap the candle to make a birthday wish 🕯️</p>
+  <!-- NAVIGATION -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-800/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full border border-amber-500/50 flex items-center justify-center bg-zinc-900">
+          <i data-lucide="scissors" class="w-5 h-5 text-amber-400"></i>
         </div>
+        <div>
+          <span class="text-xl font-bold font-serif tracking-wider text-white block leading-none">FAMOUS</span>
+          <span class="text-[10px] tracking-[0.25em] text-amber-400 uppercase font-medium">Hair Salon • Philly</span>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-300">
+        <a href="#about" class="hover:text-amber-400 transition">Heritage</a>
+        <a href="#services" class="hover:text-amber-400 transition">Services & Pricing</a>
+        <a href="#gallery" class="hover:text-amber-400 transition">Lookbook</a>
+        <a href="#reviews" class="hover:text-amber-400 transition">Google Reviews</a>
+        <a href="#location" class="hover:text-amber-400 transition">Location & Hours</a>
+      </nav>
+
+      <div class="hidden sm:flex items-center gap-4">
+        <a href="tel:+12679282229" class="text-xs text-zinc-400 hover:text-white flex items-center gap-2 px-3 py-2 rounded-lg border border-zinc-800 transition">
+          <i data-lucide="phone" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>(267) 928-2229</span>
+        </a>
+        <button onclick="openBookingModal()" class="px-5 py-2.5 rounded-full text-xs uppercase tracking-widest font-semibold bg-gradient-to-r from-amber-400 to-amber-600 text-black shadow-lg shadow-amber-500/20 hover:brightness-110 active:scale-95 transition">
+          Book Appointment
+        </button>
+      </div>
+
+      <button onclick="toggleMobileMenu()" class="md:hidden text-zinc-300 p-2" aria-label="Menu">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+      </button>
     </div>
 
-    <!-- MAIN APP CONTENT -->
-    <div id="main-content">
+    <div id="mobile-menu" class="hidden md:hidden bg-zinc-950 border-b border-zinc-800 px-6 py-5 space-y-3">
+      <a href="#about" onclick="toggleMobileMenu()" class="block text-zinc-300 text-sm">Heritage</a>
+      <a href="#services" onclick="toggleMobileMenu()" class="block text-zinc-300 text-sm">Services & Pricing</a>
+      <a href="#gallery" onclick="toggleMobileMenu()" class="block text-zinc-300 text-sm">Lookbook</a>
+      <a href="#reviews" onclick="toggleMobileMenu()" class="block text-zinc-300 text-sm">Google Reviews</a>
+      <a href="#location" onclick="toggleMobileMenu()" class="block text-zinc-300 text-sm">Location & Hours</a>
+      <div class="pt-3 border-t border-zinc-800">
+        <button onclick="toggleMobileMenu(); openBookingModal();" class="w-full py-2.5 rounded-full text-xs uppercase tracking-widest font-semibold bg-gradient-to-r from-amber-400 to-amber-600 text-black">
+          Book Appointment
+        </button>
+      </div>
+    </div>
+  </header>
 
-        <!-- HERO SECTION -->
-        <section class="hero">
-            <div class="grand-title">🎉 Happy Birthday 🎉</div>
-            <h1 class="name-title">besties sona  ❤️</h1>
-
-            <div class="hero-img-container">
-                <div class="hero-img-box">
-                    <!-- SVG Vector Fallback Image to ensure immediate stunning look -->
-                    <img src="photo2.jpg" alt="Sandini's Hero Photo" id="hero-img">
-                </div>
-            </div>
-
-            <div class="glass-card">
-                <p class="hero-quote">
-                    "May your smile always shine as bright as today. Wishing you endless happiness, love, success, and beautiful memories. Happy Birthday Sandini ❤️"
-                </p>
-            </div>
-        </section>
-
-        <!-- TYPEWRITER BIRTHDAY MESSAGE -->
-        <section>
-            <h2 class="section-title">A Special Note For You</h2>
-            <div class="glass-card typewriter-card">
-                <div class="typewriter-text" id="typewriter"></div>
-            </div>
-        </section>
-
-        <!-- MEMORY GALLERY -->
-        <section>
-            <h2 class="section-title">Precious Memories 📸</h2>
-            <div class="gallery-grid">
-                
-                <div class="gallery-item">
-                    <img src="photo1.jpg" alt="Memory 1">
-                    <div class="gallery-overlay">
-                        <h4>Beautiful Smile ✨</h4>
-                    </div>
-                </div>
-
-                <div class="gallery-item">
-                    <img src="photo3.jpg" alt="Memory 2">
-                    <div class="gallery-overlay">
-                        <h4>Unforgettable Days 🌸</h4>
-                    </div>
-                </div>
-
-                <div class="gallery-item">
-                    <img src="photo4.jpg" alt="Memory 3">
-                    <div class="gallery-overlay">
-                        <h4>Pure Joy 💖</h4>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- WISHES SECTION -->
-        <section>
-            <h2 class="section-title">Wishes For Your Journey 🌟</h2>
-            <div class="wishes-grid">
-                
-                <div class="glass-card wish-card">
-                    <i class="fas fa-heart wish-icon"></i>
-                    <h3>Endless Happiness</h3>
-                    <p>May every single moment of your year ahead be filled with laughter, love, and light.</p>
-                </div>
-
-                <div class="glass-card wish-card">
-                    <i class="fas fa-star wish-icon"></i>
-                    <h3>Dream Big</h3>
-                    <p>May all your aspirations and grandest dreams manifest effortlessly into reality.</p>
-                </div>
-
-                <div class="glass-card wish-card">
-                    <i class="fas fa-crown wish-icon"></i>
-                    <h3>Always Shine</h3>
-                    <p>Never let anything dim your radiance. You are truly unique and special.</p>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- INTERACTIVE CAKE CELEBRATION -->
-        <section>
-            <h2 class="section-title">Make A Wish & Cut The Cake 🎂</h2>
-            <div class="cake-wrapper">
-                <div class="cake" id="interactive-cake">
-                    <div class="cake-plate"></div>
-                    <div class="layer layer-bottom">
-                        <div class="icing"></div>
-                    </div>
-                    <div class="layer layer-middle">
-                        <div class="icing"></div>
-                    </div>
-                    <div class="layer layer-top">
-                        <div class="icing"></div>
-                    </div>
-                    <div class="cake-candle">
-                        <div class="cake-flame"></div>
-                    </div>
-                </div>
-                <p class="cake-cut-msg" id="cake-status">Tap the cake to cut dynamic slice! 🍰</p>
-            </div>
-        </section>
-
-        <!-- FOOTER / ENDING -->
-        <footer>
-            <h2 class="final-wish">❤️ Once Again Happy Birthday Beautiful Sandini ❤️</h2>
-            <p class="credit-text">Made with ❤️ by <span>My Best Friend</span></p>
-        </footer>
-
+  <!-- HERO -->
+  <section class="relative min-h-screen flex items-center justify-center pt-24 pb-16 overflow-hidden">
+    <div class="absolute inset-0 z-0">
+      <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=2000&q=85" alt="Salon Interior" class="w-full h-full object-cover opacity-25" />
+      <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/80 to-zinc-950/40"></div>
     </div>
 
-    <!-- ==========================================================================
-       JAVASCRIPT AUDIO, ANIMATION & INTERACTION ENGINE
-       ========================================================================== -->
-    <script>
-        /* --------------------------------------------------------------------------
-           1. WEB AUDIO SYNTHESIZER (Piano Chords & Celebration SFX)
-           -------------------------------------------------------------------------- */
-        class SoundEngine {
-            constructor() {
-                this.ctx = null;
-                this.isPlaying = false;
-                this.timer = null;
-            }
+    <div class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 text-center">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 mb-6">
+        <span class="flex h-2 w-2 rounded-full bg-amber-400 animate-pulse"></span>
+        <span class="text-[11px] font-semibold tracking-widest text-amber-300 uppercase">Philadelphia Chinatown's Master Stylists</span>
+      </div>
 
-            init() {
-                if (!this.ctx) {
-                    const AudioContext = window.AudioContext || window.webkitAudioContext;
-                    this.ctx = new AudioContext();
-                }
-                if (this.ctx.state === 'suspended') {
-                    this.ctx.resume();
-                }
-            }
+      <h1 class="text-3xl sm:text-6xl md:text-7xl font-bold font-serif tracking-tight text-white leading-tight mb-5">
+        Artistry in Every Strand.<br />
+        <span class="gold-gradient-text italic">Redefining Modern Glamour.</span>
+      </h1>
 
-            playTone(freq, duration, type = 'sine', delay = 0) {
-                if (!this.ctx) return;
-                setTimeout(() => {
-                    try {
-                        const osc = this.ctx.createOscillator();
-                        const gain = this.ctx.createGain();
-                        osc.type = type;
-                        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-                        
-                        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
-                        gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+      <p class="max-w-2xl mx-auto text-sm sm:text-lg text-zinc-300 font-light leading-relaxed mb-8">
+        Step into <strong class="text-amber-400 font-semibold">Famous Hair Salon</strong> on Cherry Street. Master precision cuts, Japanese thermal straightening, custom digital perms, and luminous balayage.
+      </p>
 
-                        osc.connect(gain);
-                        gain.connect(this.ctx.destination);
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6">
+        <button onclick="openBookingModal()" class="w-full sm:w-auto px-8 py-4 rounded-full text-xs tracking-widest uppercase font-bold bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 text-black shadow-xl shadow-amber-500/25 hover:scale-105 active:scale-95 transition-all">
+          Reserve Your Chair
+        </button>
+        <a href="#services" class="w-full sm:w-auto px-8 py-4 rounded-full text-xs tracking-widest uppercase font-semibold border border-zinc-700 bg-zinc-900/60 backdrop-blur-sm text-zinc-200 hover:border-amber-400/60 hover:text-white transition-all">
+          Explore Service Menu
+        </a>
+      </div>
 
-                        osc.start();
-                        osc.stop(this.ctx.currentTime + duration);
-                    } catch (e) {}
-                }, delay);
-            }
+      <div class="mt-12 sm:mt-16 pt-8 border-t border-zinc-800/60 grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 text-center">
+        <div>
+          <div class="text-xl sm:text-3xl font-bold font-serif text-amber-400 flex items-center justify-center gap-1">
+            4.8 <i data-lucide="star" class="w-4 h-4 fill-amber-400 text-amber-400 inline"></i>
+          </div>
+          <div class="text-[11px] sm:text-xs text-zinc-400 mt-1 uppercase tracking-wider">Google Star Rating</div>
+        </div>
+        <div>
+          <div class="text-xl sm:text-3xl font-bold font-serif text-white">15+</div>
+          <div class="text-[11px] sm:text-xs text-zinc-400 mt-1 uppercase tracking-wider">Years of Mastery</div>
+        </div>
+        <div>
+          <div class="text-xl sm:text-3xl font-bold font-serif text-amber-400">10k+</div>
+          <div class="text-[11px] sm:text-xs text-zinc-400 mt-1 uppercase tracking-wider">Signature Styles</div>
+        </div>
+        <div>
+          <div class="text-xl sm:text-3xl font-bold font-serif text-white">100%</div>
+          <div class="text-[11px] sm:text-xs text-zinc-400 mt-1 uppercase tracking-wider">Bespoke Consult</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-            playPianoMelody() {
-                this.init();
-                this.isPlaying = true;
-                // Soft Melodic Chord Progression (C - G - Am - F)
-                const notes = [
-                    523.25, 659.25, 783.99, // C Chord
-                    392.00, 493.88, 587.33, // G Chord
-                    440.00, 523.25, 659.25, // Am Chord
-                    349.23, 440.00, 523.25  // F Chord
-                ];
+  <!-- HERITAGE -->
+  <section id="about" class="py-20 bg-zinc-900/30 border-y border-zinc-800/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+        <div class="relative">
+          <div class="rounded-2xl overflow-hidden border border-amber-500/20 shadow-2xl">
+            <img src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=1200&q=80" alt="Salon styling" class="w-full h-80 sm:h-[400px] object-cover" />
+          </div>
+        </div>
 
-                let step = 0;
-                this.timer = setInterval(() => {
-                    if (!this.isPlaying) return;
-                    this.playTone(notes[step % notes.length], 1.8, 'sine');
-                    if (step % 2 === 0) {
-                        this.playTone(notes[(step + 2) % notes.length] / 2, 2.2, 'triangle');
-                    }
-                    step++;
-                }, 600);
-            }
+        <div>
+          <div class="text-xs uppercase tracking-widest text-amber-400 font-semibold mb-2 flex items-center gap-2">
+            <span class="w-6 h-[1px] bg-amber-400"></span> The Famous Experience
+          </div>
+          <h2 class="text-2xl sm:text-4xl font-serif font-bold text-white mb-4 leading-tight">
+            Where Technical Precision Meets Unrivaled Glamour
+          </h2>
+          <p class="text-zinc-300 leading-relaxed mb-6 text-sm font-light">
+            Conveniently nestled at <strong class="text-white">1010 Cherry St</strong> in Philadelphia Chinatown, Famous Hair Salon combines international styling techniques with customized hair architecture.
+          </p>
 
-            playBlowSound() {
-                this.init();
-                // White noise blow sound
-                const bufferSize = this.ctx.sampleRate * 0.8;
-                const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
-                const output = buffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) {
-                    output[i] = Math.random() * 2 - 1;
-                }
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2 border-t border-zinc-800 text-xs">
+            <div class="flex items-start gap-2.5">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-amber-400 shrink-0 mt-0.5"></i>
+              <div>
+                <h4 class="font-semibold text-white">Japanese Straightening</h4>
+                <p class="text-zinc-400 text-[11px]">Pin-straight, mirror-like glossy texture.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-amber-400 shrink-0 mt-0.5"></i>
+              <div>
+                <h4 class="font-semibold text-white">Custom Digital Perms</h4>
+                <p class="text-zinc-400 text-[11px]">Natural, bouncy mermaid waves.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-amber-400 shrink-0 mt-0.5"></i>
+              <div>
+                <h4 class="font-semibold text-white">Master Balayage</h4>
+                <p class="text-zinc-400 text-[11px]">Soft dimensional blends and toner artistry.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-amber-400 shrink-0 mt-0.5"></i>
+              <div>
+                <h4 class="font-semibold text-white">Scalp & Spa Therapy</h4>
+                <p class="text-zinc-400 text-[11px]">Deep hydration and restorative hair care.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-                const whiteNoise = this.ctx.createBufferSource();
-                whiteNoise.buffer = buffer;
+  <!-- SERVICES MENU -->
+  <section id="services" class="py-20 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <span class="text-xs uppercase tracking-widest text-amber-400 font-semibold block mb-1">Bespoke Offerings</span>
+        <h2 class="text-3xl sm:text-4xl font-serif font-bold text-white mb-3">Curated Service Menu</h2>
+        <p class="text-zinc-400 text-xs sm:text-sm">
+          Transparent pricing backed by premium products, masterful technique, and tailored consultations.
+        </p>
+        
+        <div class="flex flex-wrap justify-center gap-2 mt-6" id="category-filters">
+          <button onclick="filterServices('all')" class="category-btn active px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-amber-400 text-black" data-category="all">All Services</button>
+          <button onclick="filterServices('cut')" class="category-btn px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-zinc-900 border border-zinc-800 text-zinc-300 hover:border-amber-400" data-category="cut">Cuts & Styling</button>
+          <button onclick="filterServices('color')" class="category-btn px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-zinc-900 border border-zinc-800 text-zinc-300 hover:border-amber-400" data-category="color">Color & Balayage</button>
+          <button onclick="filterServices('perm')" class="category-btn px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-zinc-900 border border-zinc-800 text-zinc-300 hover:border-amber-400" data-category="perm">Perms & Straightening</button>
+        </div>
+      </div>
 
-                const filter = this.ctx.createBiquadFilter();
-                filter.type = 'lowpass';
-                filter.frequency.setValueAtTime(800, this.ctx.currentTime);
-                filter.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.8);
+      <div id="services-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"></div>
+    </div>
+  </section>
 
-                const gain = this.ctx.createGain();
-                gain.gain.setValueAtTime(0.3, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.8);
+  <!-- GALLERY -->
+  <section id="gallery" class="py-20 bg-zinc-900/40 border-t border-zinc-800/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
+        <div>
+          <span class="text-xs uppercase tracking-widest text-amber-400 font-semibold block mb-1">Our Master Portfolio</span>
+          <h2 class="text-2xl sm:text-4xl font-serif font-bold text-white">The Cherry St Lookbook</h2>
+        </div>
+        <p class="text-zinc-400 text-xs sm:text-sm max-w-md mt-2 md:mt-0 font-light">
+          Real client transformations crafted with precision shears, luxury tones, and heat perms.
+        </p>
+      </div>
 
-                whiteNoise.connect(filter);
-                filter.connect(gain);
-                gain.connect(this.ctx.destination);
+      <div id="portfolio-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"></div>
+    </div>
+  </section>
 
-                whiteNoise.start();
-            }
+  <!-- GOOGLE REVIEWS -->
+  <section id="reviews" class="py-20 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="glass-card rounded-2xl p-6 sm:p-8 mb-12 border border-amber-500/20 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center p-2.5 shrink-0 shadow-md">
+            <svg class="w-full h-full" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17Z"/>
+              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24Z"/>
+              <path fill="#FBBC05" d="M5.28 14.27a7.12 7.12 0 0 1 0-4.54V6.58H1.25a11.96 11.96 0 0 0 0 10.84l4.03-3.15Z"/>
+              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98Z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-2xl font-bold font-serif text-white">4.8</span>
+              <div class="flex text-amber-400">
+                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+                <i data-lucide="star" class="w-4 h-4 fill-amber-400"></i>
+              </div>
+            </div>
+            <p class="text-xs text-zinc-400 mt-0.5">Based on <strong class="text-zinc-200">320+ verified Google reviews</strong> • Chinatown, Philadelphia</p>
+          </div>
+        </div>
 
-            playPop() {
-                this.init();
-                this.playTone(800 + Math.random() * 400, 0.15, 'sine');
-            }
+        <a href="https://maps.google.com/?cid=15821124682675254577&entry=gps" target="_blank" rel="noopener noreferrer" class="w-full md:w-auto text-center inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-xs uppercase tracking-widest font-semibold bg-zinc-800 text-white hover:bg-amber-500 hover:text-black transition-all border border-zinc-700">
+          <span>View on Google Maps</span>
+          <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+        </a>
+      </div>
 
-            stop() {
-                this.isPlaying = false;
-                if (this.timer) clearInterval(this.timer);
-            }
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card glass-card-hover p-5 rounded-2xl flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex text-amber-400">
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+              </div>
+              <span class="text-[10px] text-zinc-400 flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-emerald-400"></i> Verified</span>
+            </div>
+            <p class="text-xs text-zinc-300 italic mb-4 leading-relaxed">
+              "Famous Hair Salon did the most incredible Japanese thermal straightening on my thick, curly hair. It is silky, shiny, and takes 5 minutes to blow dry now."
+            </p>
+          </div>
+          <div class="flex items-center gap-3 pt-3 border-t border-zinc-800 text-xs">
+            <div class="w-8 h-8 rounded-full bg-amber-500 font-bold flex items-center justify-center text-black text-xs">CL</div>
+            <div>
+              <h4 class="font-semibold text-white leading-none">Christina L.</h4>
+              <p class="text-[10px] text-zinc-400 mt-0.5">Center City</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card glass-card-hover p-5 rounded-2xl flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex text-amber-400">
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+              </div>
+              <span class="text-[10px] text-zinc-400 flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-emerald-400"></i> Verified</span>
+            </div>
+            <p class="text-xs text-zinc-300 italic mb-4 leading-relaxed">
+              "Best fade and Asian texture cut in Philadelphia. The stylists take their time, pay immense attention to detail, and the scalp massage is top tier."
+            </p>
+          </div>
+          <div class="flex items-center gap-3 pt-3 border-t border-zinc-800 text-xs">
+            <div class="w-8 h-8 rounded-full bg-zinc-800 font-bold flex items-center justify-center text-amber-400 text-xs border border-zinc-700">MK</div>
+            <div>
+              <h4 class="font-semibold text-white leading-none">Michael K.</h4>
+              <p class="text-[10px] text-zinc-400 mt-0.5">Philly Local</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card glass-card-hover p-5 rounded-2xl flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex text-amber-400">
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+                <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400"></i>
+              </div>
+              <span class="text-[10px] text-zinc-400 flex items-center gap-1"><i data-lucide="check" class="w-3 h-3 text-emerald-400"></i> Verified</span>
+            </div>
+            <p class="text-xs text-zinc-300 italic mb-4 leading-relaxed">
+              "I got an ashy balayage and tone here and received compliments constantly for weeks! Prices are exceptionally fair for the level of craftsmanship."
+            </p>
+          </div>
+          <div class="flex items-center gap-3 pt-3 border-t border-zinc-800 text-xs">
+            <div class="w-8 h-8 rounded-full bg-amber-400 font-bold flex items-center justify-center text-black text-xs">SY</div>
+            <div>
+              <h4 class="font-semibold text-white leading-none">Samantha Y.</h4>
+              <p class="text-[10px] text-zinc-400 mt-0.5">Fishtown, PA</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCATION & HOURS -->
+  <section id="location" class="py-20 bg-zinc-900/30 border-t border-zinc-800/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div class="lg:col-span-5 space-y-6">
+          <div>
+            <span class="text-xs uppercase tracking-widest text-amber-400 font-semibold block mb-1">Visit Us Today</span>
+            <h2 class="text-2xl sm:text-3xl font-serif font-bold text-white">Chinatown Studio Location</h2>
+            <p class="text-zinc-400 text-xs sm:text-sm mt-2 leading-relaxed">
+              Located on historic Cherry Street between 10th & 11th. Walk-ins welcomed based on stylist availability.
+            </p>
+          </div>
+
+          <div class="glass-card p-5 rounded-2xl border border-zinc-800 space-y-4 text-xs">
+            <div class="flex items-start gap-3">
+              <div class="p-2 rounded-lg bg-amber-500/10 text-amber-400 shrink-0">
+                <i data-lucide="map-pin" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-white">Address</h4>
+                <p class="text-zinc-300 mt-0.5">1010 Cherry St, Philadelphia, PA 19107, United States</p>
+                <a href="https://maps.google.com/?cid=15821124682675254577&entry=gps" target="_blank" rel="noopener noreferrer" class="text-amber-400 hover:underline mt-1 inline-block">
+                  Open Directions &rarr;
+                </a>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <div class="p-2 rounded-lg bg-amber-500/10 text-amber-400 shrink-0">
+                <i data-lucide="phone-call" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h4 class="font-semibold text-white">Phone Reservations</h4>
+                <a href="tel:+12679282229" class="text-zinc-300 hover:text-amber-400 font-medium mt-0.5 block">+1 (267) 928-2229</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card p-5 rounded-2xl border border-zinc-800 text-xs">
+            <h4 class="font-bold text-white uppercase tracking-wider mb-3 flex items-center gap-2">
+              <i data-lucide="clock" class="w-4 h-4 text-amber-400"></i> Operating Hours
+            </h4>
+            <div class="space-y-2">
+              <div class="flex justify-between py-1 border-b border-zinc-800 text-zinc-300">
+                <span>Monday – Saturday</span>
+                <span class="text-white font-semibold">10:00 AM – 7:30 PM</span>
+              </div>
+              <div class="flex justify-between py-1 text-zinc-300">
+                <span>Sunday</span>
+                <span class="text-white font-semibold">10:00 AM – 7:00 PM</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 h-80 sm:h-[450px] rounded-2xl overflow-hidden border border-zinc-800 shadow-2xl relative">
+          <iframe 
+            src="https://maps.google.com/maps?q=1010+Cherry+St,+Philadelphia,+PA+19107&t=&z=16&ie=UTF8&iwloc=&output=embed" 
+            class="w-full h-full border-0 grayscale contrast-125 opacity-90 hover:opacity-100 hover:grayscale-0 transition-all duration-500" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Location">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOOKING MODAL -->
+  <div id="booking-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm overflow-y-auto">
+    <div class="relative w-full max-w-lg bg-zinc-950 border border-amber-500/30 rounded-3xl p-5 sm:p-8 shadow-2xl my-6">
+      <button onclick="closeBookingModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white p-2">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="text-center mb-5">
+        <span class="text-[10px] uppercase tracking-widest text-amber-400 font-semibold block mb-1">Famous Hair Salon</span>
+        <h3 class="text-xl sm:text-2xl font-serif font-bold text-white">Book an Appointment</h3>
+        <p class="text-xs text-zinc-400 mt-1">Select your service and preferred time.</p>
+      </div>
+
+      <form id="booking-form" onsubmit="handleBookingSubmit(event)" class="space-y-3.5">
+        <div>
+          <label class="block text-[11px] font-semibold text-zinc-300 uppercase tracking-wider mb-1">Full Name *</label>
+          <input type="text" id="book-name" required placeholder="e.g. Eleanor Vance" class="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-white text-xs focus:border-amber-400 focus:outline-none" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] font-semibold text-zinc-300 uppercase tracking-wider mb-1">Email *</label>
+            <input type="email" id="book-email" required placeholder="eleanor@example.com" class="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-white text-xs focus:border-amber-400 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-zinc-300 uppercase tracking-wider mb-1">Phone *</label>
+            <input type="tel" id="book-phone" required placeholder="+1 (267) 000-0000" class="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-white text-xs focus:border-amber-400 focus:outline-none" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-semibold text-zinc-300 uppercase tracking-wider mb-1">Service *</label>
+          <select id="book-service" required class="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-white text-xs focus:border-amber-400 focus:outline-none"></select>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] font-semibold text-zinc-300 uppercase tracking-wider mb-1">Date *</label>
+            <input type="date" id="book-date" required class="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-white text-xs focus:border-amber-400 focus:outline-none text-zinc-300" />
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-zinc-300 uppercase tracking-wider mb-1">Time *</label>
+            <select id="book-time" required class="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-white text-xs focus:border-amber-400 focus:outline-none">
+              <option value="10:00 AM">10:00 AM</option>
+              <option value="11:30 AM">11:30 AM</option>
+              <option value="01:00 PM">01:00 PM</option>
+              <option value="02:30 PM">02:30 PM</option>
+              <option value="04:00 PM">04:00 PM</option>
+              <option value="05:30 PM">05:30 PM</option>
+              <option value="06:30 PM">06:30 PM</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-semibold text-zinc-300 uppercase tracking-wider mb-1">Notes</label>
+          <textarea id="book-notes" rows="2" placeholder="Length, previous color or perm history..." class="w-full px-3.5 py-2 rounded-xl bg-zinc-900 border border-zinc-800 text-white text-xs focus:border-amber-400 focus:outline-none"></textarea>
+        </div>
+
+        <button type="submit" class="w-full py-3 rounded-full text-xs uppercase tracking-widest font-bold bg-gradient-to-r from-amber-400 to-amber-600 text-black shadow-lg shadow-amber-500/20 hover:brightness-110 active:scale-95 transition">
+          Confirm Reservation
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/90 backdrop-blur-md" onclick="closeLightbox()">
+    <div class="relative max-w-3xl max-h-[90vh]" onclick="event.stopPropagation()">
+      <button onclick="closeLightbox()" class="absolute -top-10 right-0 text-zinc-400 hover:text-white p-1">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+      <img id="lightbox-img" src="" alt="Lookbook zoom" class="max-h-[75vh] w-auto rounded-xl border border-zinc-800 object-contain shadow-2xl" />
+      <p id="lightbox-caption" class="text-center text-xs sm:text-sm font-medium text-amber-400 mt-2"></p>
+    </div>
+  </div>
+
+  <!-- FOOTER (NO STAFF BUTTON) -->
+  <footer class="bg-black border-t border-zinc-800/80 pt-14 pb-12 text-zinc-400">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-zinc-800/60">
+        <div class="space-y-3 md:col-span-2">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-full border border-amber-500/50 flex items-center justify-center bg-zinc-900">
+              <i data-lucide="scissors" class="w-3.5 h-3.5 text-amber-400"></i>
+            </div>
+            <span class="text-lg font-bold font-serif tracking-wider text-white">FAMOUS HAIR SALON</span>
+          </div>
+          <p class="text-xs text-zinc-400 max-w-md leading-relaxed">
+            Philadelphia Chinatown premier salon for Japanese permanent rebonding, digital waves, precision cuts, and dimensional blonde toner.
+          </p>
+          <div class="flex items-center gap-2 pt-1">
+            <a href="https://maps.google.com/?cid=15821124682675254577&entry=gps" target="_blank" rel="noopener noreferrer" class="w-7 h-7 rounded bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-amber-400" aria-label="Google Maps">
+              <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+            </a>
+            <a href="tel:+12679282229" class="w-7 h-7 rounded bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-amber-400" aria-label="Phone">
+              <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="space-y-2 text-xs">
+          <h5 class="font-bold uppercase tracking-widest text-white">Navigation</h5>
+          <ul class="space-y-1.5">
+            <li><a href="#services" class="hover:text-amber-400">Signature Services</a></li>
+            <li><a href="#gallery" class="hover:text-amber-400">Style Lookbook</a></li>
+            <li><a href="#reviews" class="hover:text-amber-400">Google Testimonials</a></li>
+            <li><a href="#location" class="hover:text-amber-400">Hours & Map</a></li>
+          </ul>
+        </div>
+
+        <div class="space-y-2 text-xs">
+          <h5 class="font-bold uppercase tracking-widest text-white">Coordinates</h5>
+          <p class="text-zinc-300">1010 Cherry St, Philadelphia, PA 19107</p>
+          <p class="text-zinc-300">+1 (267) 928-2229</p>
+          <p class="text-amber-400 font-medium">Daily: 10:00 AM – 7:30 PM</p>
+        </div>
+      </div>
+
+      <div class="pt-8 text-center text-xs text-zinc-500">
+        <p>&copy; <span id="current-year"></span> Famous Hair Salon. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const DEFAULT_SERVICES = [
+      { id: "srv-1", name: "Japanese Thermal Straightening", category: "perm", price: 320, description: "Permanent silk rebonding treatment designed to transform curly, coarse hair into mirror-shine, pin-straight strands resistant to humidity.", image: "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=800&q=80" },
+      { id: "srv-2", name: "Signature Balayage & Glaze", category: "color", price: 240, description: "Custom hand-painted French balayage technique with bespoke gloss toner for seamless, sun-kissed dimensional movement and soft regrowth.", image: "https://images.unsplash.com/photo-1519699047748-de8e457a634e?auto=format&fit=crop&w=800&q=80" },
+      { id: "srv-3", name: "Korean Digital Wave Perm", category: "perm", price: 210, description: "Modern temperature-controlled digital perm creating natural, effortless beach waves and voluminous texture with soft hold.", image: "https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=800&q=80" },
+      { id: "srv-4", name: "Master Precision Cut & Blowout", category: "cut", price: 75, description: "Comprehensive structural haircut tailored to face contours and hair texture, accompanied by an aromatic shampoo and signature blowout.", image: "https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?auto=format&fit=crop&w=800&q=80" },
+      { id: "srv-5", name: "Full Platinum Bleach & Tone", category: "color", price: 280, description: "Precision root-to-end lightning followed by neutralizing violet or ash pearl toner, enriched with bond-protecting plex treatment.", image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80" },
+      { id: "srv-6", name: "Gentleman's Fade & Scissor Cut", category: "cut", price: 45, description: "Clean skin taper or drop fade with tailored scissor texturizing on top, finished with cooling scalp tonic and styling paste.", image: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=800&q=80" }
+    ];
+
+    const DEFAULT_PORTFOLIO = [
+      { id: "img-1", title: "Dimensional Ash Caramel Balayage", url: "https://images.unsplash.com/photo-1560869713-7d0a29430803?auto=format&fit=crop&w=800&q=80" },
+      { id: "img-2", title: "Japanese Thermal Rebonding", url: "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=800&q=80" },
+      { id: "img-3", title: "Korean Digital Mermaid Waves", url: "https://images.unsplash.com/photo-1562322140-8baeececf3df?auto=format&fit=crop&w=800&q=80" },
+      { id: "img-4", title: "Platinum Ice Blonde Foilayage", url: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80" }
+    ];
+
+    function getStorage(k, fb) {
+      try { const s = localStorage.getItem(k); return s ? JSON.parse(s) : fb; } catch (e) { return fb; }
+    }
+    function setStorage(k, v) {
+      try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { console.error(e); }
+    }
+
+    let services = getStorage("famous_salon_services", DEFAULT_SERVICES);
+    let portfolio = getStorage("famous_salon_portfolio", DEFAULT_PORTFOLIO);
+    let bookings = getStorage("famous_salon_bookings", []);
+    let activeFilter = "all";
+
+    function showToast(msg) {
+      const c = document.getElementById("toast-container");
+      const el = document.createElement("div");
+      el.className = "pointer-events-auto px-4 py-2.5 rounded-xl border border-amber-500/40 text-xs font-medium bg-zinc-950 text-white shadow-2xl transition-all duration-300";
+      el.innerText = msg;
+      c.appendChild(el);
+      setTimeout(() => el.remove(), 3500);
+    }
+
+    function renderPublicServices() {
+      const container = document.getElementById("services-grid");
+      if (!container) return;
+
+      const filtered = activeFilter === "all" ? services : services.filter(s => s.category === activeFilter);
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="col-span-full text-center py-10 text-zinc-400 text-xs">No services found.</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => `
+        <div class="glass-card glass-card-hover rounded-3xl overflow-hidden flex flex-col justify-between group">
+          <div>
+            <div class="relative h-52 overflow-hidden bg-zinc-900">
+              <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-700" onerror="this.src='https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80'" />
+              <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent"></div>
+              <div class="absolute top-3 right-3 px-3 py-1 rounded-full bg-black/75 backdrop-blur-md border border-amber-500/30 text-amber-400 font-serif font-bold text-sm">
+                $${item.price}
+              </div>
+            </div>
+            <div class="p-5">
+              <span class="text-[9px] uppercase font-bold tracking-widest text-amber-400 block mb-1">
+                ${item.category === 'cut' ? 'Cuts & Style' : item.category === 'color' ? 'Color & Tone' : 'Perm & Straightening'}
+              </span>
+              <h3 class="text-lg font-serif font-bold text-white mb-2 leading-snug">${item.name}</h3>
+              <p class="text-xs text-zinc-400 leading-relaxed font-light">${item.description}</p>
+            </div>
+          </div>
+          <div class="p-5 pt-0">
+            <button onclick="bookSpecificService('${item.name.replace(/'/g, "\\'")}')" class="w-full py-2.5 rounded-full text-xs uppercase tracking-widest font-semibold border border-amber-500/40 text-amber-300 hover:bg-amber-400 hover:text-black hover:border-amber-400 transition flex items-center justify-center gap-1.5">
+              <span>Select & Book</span>
+              <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+      populateServiceSelectOptions();
+    }
+
+    function filterServices(cat) {
+      activeFilter = cat;
+      document.querySelectorAll(".category-btn").forEach(btn => {
+        if (btn.getAttribute("data-category") === cat) {
+          btn.className = "category-btn px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-amber-400 text-black";
+        } else {
+          btn.className = "category-btn px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase bg-zinc-900 border border-zinc-800 text-zinc-300 hover:border-amber-400";
         }
+      });
+      renderPublicServices();
+    }
 
-        const sound = new SoundEngine();
+    function populateServiceSelectOptions() {
+      const select = document.getElementById("book-service");
+      if (!select) return;
+      select.innerHTML = services.map(s => `<option value="${s.name}">${s.name} - $${s.price}</option>`).join('');
+    }
 
-        /* --------------------------------------------------------------------------
-           2. CANVAS ENGINE (Confetti, Fireworks, Petals)
-           -------------------------------------------------------------------------- */
-        const canvas = document.getElementById('particle-canvas');
-        const ctx = canvas.getContext('2d');
+    function renderPublicPortfolio() {
+      const container = document.getElementById("portfolio-grid");
+      if (!container) return;
 
-        let width = canvas.width = window.innerWidth;
-        let height = canvas.height = window.innerHeight;
+      container.innerHTML = portfolio.map(item => `
+        <div class="relative group rounded-xl overflow-hidden aspect-[4/5] bg-zinc-900 cursor-pointer border border-zinc-800/80" onclick="openLightbox('${item.url}', '${item.title.replace(/'/g, "\\'")}')">
+          <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80'" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-end p-3">
+            <span class="text-xs font-serif font-bold text-white leading-tight">${item.title}</span>
+            <span class="text-[9px] text-amber-400 tracking-wider uppercase mt-1 flex items-center gap-1">
+              <i data-lucide="zoom-in" class="w-3 h-3"></i> Zoom
+            </span>
+          </div>
+        </div>
+      `).join('');
 
-        window.addEventListener('resize', () => {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-        });
+      lucide.createIcons();
+    }
 
-        const particles = [];
-        const fireworks = [];
+    function openLightbox(url, title) {
+      document.getElementById("lightbox-img").src = url;
+      document.getElementById("lightbox-caption").innerText = title;
+      document.getElementById("lightbox-modal").classList.remove("hidden");
+    }
 
-        class Particle {
-            constructor(x, y, type) {
-                this.x = x;
-                this.y = y;
-                this.type = type; // 'confetti', 'petal', 'smoke'
-                this.size = Math.random() * 8 + 4;
-                this.vx = (Math.random() - 0.5) * 6;
-                this.vy = type === 'smoke' ? -(Math.random() * 2 + 1) : Math.random() * 3 + 2;
-                this.color = type === 'smoke' ? 'rgba(200,200,200,0.4)' : ['#ff4d8d', '#ffd700', '#ffffff', '#ff85a2', '#70a1ff'][Math.floor(Math.random() * 5)];
-                this.rotation = Math.random() * 360;
-                this.rSpeed = (Math.random() - 0.5) * 5;
-                this.opacity = 1;
-                this.life = type === 'smoke' ? 80 : 300;
-            }
+    function closeLightbox() {
+      document.getElementById("lightbox-modal").classList.add("hidden");
+    }
 
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                this.rotation += this.rSpeed;
-                
-                if (this.type === 'smoke') {
-                    this.opacity -= 0.012;
-                    this.size += 0.2;
-                } else {
-                    this.vx *= 0.99;
-                }
+    function openBookingModal() {
+      document.getElementById("booking-modal").classList.remove("hidden");
+      const today = new Date().toISOString().split("T")[0];
+      const d = document.getElementById("book-date");
+      d.setAttribute("min", today);
+      if (!d.value) d.value = today;
+    }
 
-                this.life--;
-            }
+    function closeBookingModal() {
+      document.getElementById("booking-modal").classList.add("hidden");
+    }
 
-            draw() {
-                ctx.save();
-                ctx.translate(this.x, this.y);
-                ctx.rotate((this.rotation * Math.PI) / 180);
-                ctx.globalAlpha = Math.max(0, this.opacity);
+    function bookSpecificService(name) {
+      openBookingModal();
+      const s = document.getElementById("book-service");
+      if (s) s.value = name;
+    }
 
-                if (this.type === 'smoke') {
-                    ctx.fillStyle = this.color;
-                    ctx.beginPath();
-                    ctx.arc(0, 0, this.size, 0, Math.PI * 2);
-                    ctx.fill();
-                } else if (this.type === 'petal') {
-                    ctx.fillStyle = this.color;
-                    ctx.beginPath();
-                    ctx.ellipse(0, 0, this.size, this.size / 2, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                } else {
-                    ctx.fillStyle = this.color;
-                    ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
-                }
+    function handleBookingSubmit(event) {
+      event.preventDefault();
+      const currentBookings = getStorage("famous_salon_bookings", []);
+      const newBooking = {
+        id: "FHS-" + Math.floor(1000 + Math.random() * 9000),
+        name: document.getElementById("book-name").value.trim(),
+        email: document.getElementById("book-email").value.trim(),
+        phone: document.getElementById("book-phone").value.trim(),
+        service: document.getElementById("book-service").value,
+        date: document.getElementById("book-date").value,
+        time: document.getElementById("book-time").value,
+        notes: document.getElementById("book-notes").value.trim() || "None",
+        status: "Pending",
+        createdAt: new Date().toISOString().split("T")[0]
+      };
 
-                ctx.restore();
-            }
-        }
+      currentBookings.unshift(newBooking);
+      setStorage("famous_salon_bookings", currentBookings);
 
-        class FireworkParticle {
-            constructor(x, y, color) {
-                this.x = x;
-                this.y = y;
-                this.color = color;
-                const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 5 + 2;
-                this.vx = Math.cos(angle) * speed;
-                this.vy = Math.sin(angle) * speed;
-                this.opacity = 1;
-                this.friction = 0.95;
-                this.gravity = 0.12;
-            }
+      event.target.reset();
+      closeBookingModal();
+      showToast(`Appointment booked successfully! Ref #${newBooking.id}`);
+    }
 
-            update() {
-                this.vx *= this.friction;
-                this.vy *= this.friction;
-                this.vy += this.gravity;
-                this.x += this.vx;
-                this.y += this.vy;
-                this.opacity -= 0.018;
-            }
+    function toggleMobileMenu() {
+      document.getElementById("mobile-menu").classList.toggle("hidden");
+    }
 
-            draw() {
-                ctx.save();
-                ctx.globalAlpha = Math.max(0, this.opacity);
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            }
-        }
-
-        function createConfettiBurst(count = 70) {
-            for (let i = 0; i < count; i++) {
-                particles.push(new Particle(width / 2, height / 2 - 50, 'confetti'));
-            }
-        }
-
-        function createSmokeBurst(x, y) {
-            for (let i = 0; i < 25; i++) {
-                particles.push(new Particle(x, y, 'smoke'));
-            }
-        }
-
-        function triggerFirework(x, y) {
-            sound.playPop();
-            const colors = ['#ff4d8d', '#ffd700', '#ffffff', '#00f2fe', '#ff0844'];
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            for (let i = 0; i < 40; i++) {
-                fireworks.push(new FireworkParticle(x, y, color));
-            }
-        }
-
-        function renderLoop() {
-            ctx.clearRect(0, 0, width, height);
-
-            // Update & Draw Confetti/Petals
-            for (let i = particles.length - 1; i >= 0; i--) {
-                const p = particles[i];
-                p.update();
-                p.draw();
-                if (p.life <= 0 || p.opacity <= 0 || p.y > height + 20) {
-                    particles.splice(i, 1);
-                }
-            }
-
-            // Update & Draw Fireworks
-            for (let i = fireworks.length - 1; i >= 0; i--) {
-                const f = fireworks[i];
-                f.update();
-                f.draw();
-                if (f.opacity <= 0) {
-                    fireworks.splice(i, 1);
-                }
-            }
-
-            // Ambient background flower petals
-            if (Math.random() < 0.08) {
-                particles.push(new Particle(Math.random() * width, -10, 'petal'));
-            }
-
-            requestAnimationFrame(renderLoop);
-        }
-
-        renderLoop();
-
-        /* --------------------------------------------------------------------------
-           3. CANDLE BLOW INTERACTION & INTRO FLOW
-           -------------------------------------------------------------------------- */
-        const candleTrigger = document.getElementById('candle-trigger');
-        const mainFlame = document.getElementById('main-flame');
-        const introOverlay = document.getElementById('intro-overlay');
-        const mainContent = document.getElementById('main-content');
-        let introBlown = false;
-
-        candleTrigger.addEventListener('click', (e) => {
-            if (introBlown) return;
-            introBlown = true;
-
-            // Blow sound & extinguish flame
-            sound.playBlowSound();
-            mainFlame.classList.add('extinguished');
-
-            // Smoke Effect
-            const rect = mainFlame.getBoundingClientRect();
-            createSmokeBurst(rect.left + 12, rect.top + 10);
-
-            // Start Audio
-            sound.playPianoMelody();
-
-            // Transition Overlay after smoke
-            setTimeout(() => {
-                introOverlay.classList.add('fade-out');
-                mainContent.classList.add('visible');
-
-                // Confetti & Fireworks burst on Grand Reveal
-                createConfettiBurst(120);
-                setTimeout(() => triggerFirework(width * 0.3, height * 0.3), 300);
-                setTimeout(() => triggerFirework(width * 0.7, height * 0.3), 600);
-
-                // Start Typewriter
-                startTypewriter();
-            }, 800);
-        });
-
-        /* --------------------------------------------------------------------------
-           4. TYPEWRITER ANIMATION
-           -------------------------------------------------------------------------- */
-        const messageText = `Dear Sandini,
-
-On this special day, I want to remind you how incredibly wonderful you are. Your presence brings warmth, joy, and brightness into the lives of everyone around you.
-
-May your year ahead be blessed with pure happiness, thrilling adventures, and dreams coming true. Always keep smiling! 🌟✨`;
-
-        const typewriterEl = document.getElementById('typewriter');
-        let charIndex = 0;
-
-        function startTypewriter() {
-            if (charIndex < messageText.length) {
-                typewriterEl.textContent += messageText.charAt(charIndex);
-                charIndex++;
-                setTimeout(startTypewriter, 40);
-            }
-        }
-
-        /* --------------------------------------------------------------------------
-           5. CAKE CUTTING INTERACTION
-           -------------------------------------------------------------------------- */
-        const cake = document.getElementById('interactive-cake');
-        const cakeStatus = document.getElementById('cake-status');
-
-        cake.addEventListener('click', (e) => {
-            cake.classList.add('cut');
-            sound.playPop();
-            createConfettiBurst(80);
-
-            // Firework above cake
-            const rect = cake.getBoundingClientRect();
-            triggerFirework(rect.left + rect.width / 2, rect.top - 20);
-
-            cakeStatus.textContent = "🎉 Wish Granted! Happy Birthday Sandini! ❤️";
-            cakeStatus.style.color = "var(--primary-pink)";
-        });
-
-        /* --------------------------------------------------------------------------
-           6. AUDIO TOGGLE BUTTON CONTROLLER
-           -------------------------------------------------------------------------- */
-        const audioBtn = document.getElementById('audio-toggle');
-        let audioActive = false;
-
-        audioBtn.addEventListener('click', () => {
-            if (!audioActive) {
-                sound.playPianoMelody();
-                audioBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-                audioActive = true;
-            } else {
-                sound.stop();
-                audioBtn.innerHTML = '<i class="fas fa-music"></i>';
-                audioActive = false;
-            }
-        });
-
-    </script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("current-year").innerText = new Date().getFullYear();
+      renderPublicServices();
+      renderPublicPortfolio();
+      lucide.createIcons();
+    });
+  </script>
 </body>
 </html>
